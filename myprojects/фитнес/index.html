@@ -150,6 +150,99 @@
       cursor: pointer;
     }
 
+    /* ===== МОБИЛЬНАЯ ШАПКА ===== */
+    .mobile-header {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mobile-logo {
+      width: 36px;
+      height: 36px;
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    }
+
+    .mobile-logo span {
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .mobile-menu-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      justify-content: center;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .mobile-menu-btn span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      transition: var(--transition);
+    }
+
+    .mobile-menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
+    .mobile-menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* ===== МОБИЛЬНОЕ МЕНЮ ===== */
+    .mobile-nav-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(255,255,255,0.98);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .mobile-nav-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-nav-overlay a {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .mobile-nav-overlay a:hover { color: var(--accent); }
+
     /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
     .main-content {
       margin-left: 80px;
@@ -839,6 +932,7 @@
       .hero-right { height: 50vh; }
       .hero-left { padding: 60px 40px; }
       .hero h1 { font-size: 48px; }
+      .hero-metrics { gap: 30px; }
       .section-big-number { grid-template-columns: 1fr; padding: 60px 40px; gap: 20px; }
       .big-number { position: static; font-size: 100px; }
       .section-asymmetric { grid-template-columns: 1fr 1fr; padding: 60px 40px; }
@@ -850,21 +944,155 @@
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .main-content { margin-left: 0; }
+      .mobile-header { display: flex; }
+      .mobile-nav-overlay { display: flex; }
+
+      /* Hero */
       .hero-left { padding: 40px 20px; }
       .hero h1 { font-size: 36px; }
-      .section-big-number { padding: 40px 20px; }
-      .scroll-cards-header { padding: 0 20px 20px; flex-direction: column; gap: 12px; }
-      .scroll-cards-track { padding: 0 20px 20px; }
-      .program-card { min-width: 300px; }
-      .section-asymmetric { grid-template-columns: 1fr; padding: 40px 20px; }
-      .trainer-row { grid-template-columns: 1fr; gap: 16px; text-align: center; }
-      .trainer-action { text-align: center; }
-      .section-pricing { padding: 40px 20px; }
-      .pricing-table { font-size: 12px; }
-      .section-cta { padding: 40px 20px; }
-      .footer-minimal { padding: 20px; flex-direction: column; gap: 8px; }
-      .toast-container { left: 16px; bottom: 16px; }
+      .hero-desc { font-size: 14px; max-width: 100%; }
       .hero-metrics { gap: 20px; flex-wrap: wrap; }
+      .metric-value { font-size: 28px; }
+      .metric-label { font-size: 10px; }
+      .hero-right { height: 40vh; }
+      .hero-scroll-indicator { display: none; }
+
+      /* Big number */
+      .section-big-number { padding: 40px 20px; }
+      .big-number { font-size: 80px; }
+      .big-number-content h2 { font-size: 28px; }
+      .big-number-content p { font-size: 14px; }
+
+      /* Scroll cards */
+      .scroll-cards-header { padding: 0 20px 20px; flex-direction: column; gap: 12px; align-items: flex-start; }
+      .scroll-cards-header h2 { font-size: 28px; }
+      .scroll-cards-track { padding: 0 20px 20px; }
+      .program-card { min-width: 280px; max-width: 320px; }
+      .program-card-image { height: 200px; }
+      .program-card-body { padding: 20px; }
+      .program-card-body h3 { font-size: 20px; }
+
+      /* Asymmetric */
+      .section-asymmetric { grid-template-columns: 1fr; padding: 40px 20px; }
+      .asym-card { padding: 32px; }
+      .asym-card.large img { height: 250px; }
+      .asym-card .stat-large { font-size: 36px; }
+
+      /* Trainers */
+      .section-trainers { padding: 40px 20px; }
+      .section-trainers h2 { font-size: 28px; }
+      .trainer-row { grid-template-columns: 1fr; gap: 16px; text-align: center; padding: 20px 0; }
+      .trainer-row img { max-width: 200px; margin: 0 auto; aspect-ratio: 1; }
+      .trainer-info h3 { font-size: 22px; }
+      .trainer-info p { max-width: 100%; }
+      .trainer-action { text-align: center; }
+      .trainer-row:hover { padding-left: 0; background: var(--accent-soft); }
+
+      /* Pricing */
+      .section-pricing { padding: 40px 20px; }
+      .section-pricing h2 { font-size: 28px; }
+      .pricing-table th { font-size: 9px; letter-spacing: 1px; }
+      .pricing-table td { font-size: 12px; padding: 14px 0; }
+
+      /* CTA */
+      .section-cta { padding: 40px 20px; }
+      .cta-text h2 { font-size: 32px; }
+
+      /* Footer */
+      .footer-minimal { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+
+      /* Toast */
+      .toast-container { left: 16px; bottom: 16px; }
+    }
+
+    /* Маленькие телефоны */
+    @media (max-width: 480px) {
+      .hero-left { padding: 30px 16px; }
+      .hero h1 { font-size: 30px; }
+      .hero-desc { font-size: 13px; }
+      .hero-metrics { gap: 16px; }
+      .metric-value { font-size: 24px; }
+      .btn { padding: 14px 24px; font-size: 10px; letter-spacing: 1px; }
+      .btn-outline-light { margin-left: 0; margin-top: 8px; display: inline-flex; }
+
+      .big-number { font-size: 60px; }
+      .big-number-content h2 { font-size: 24px; }
+
+      .section-scroll-cards { padding: 40px 0 60px; }
+      .program-card { min-width: 260px; }
+      .program-card-image { height: 180px; }
+      .program-card-body h3 { font-size: 18px; }
+
+      .asym-card h4 { font-size: 20px; }
+      .asym-card .stat-large { font-size: 30px; }
+
+      .cta-text h2 { font-size: 28px; }
+      .cta-form input { font-size: 14px; }
+
+      .mobile-nav-overlay a { font-size: 24px; }
+    }
+
+    /* Очень маленькие телефоны */
+    @media (max-width: 375px) {
+      .hero h1 { font-size: 26px; }
+      .hero-metrics { gap: 12px; }
+      .metric-value { font-size: 20px; }
+      .metric-label { font-size: 8px; letter-spacing: 1px; }
+      .hero-right { height: 30vh; }
+
+      .big-number { font-size: 50px; }
+      .big-number-content h2 { font-size: 22px; }
+      .big-number-content p { font-size: 13px; }
+
+      .section-scroll-cards { padding: 30px 0 50px; }
+      .program-card { min-width: 240px; }
+      .program-card-image { height: 160px; }
+      .program-card-body { padding: 16px; }
+      .program-card-body h3 { font-size: 16px; }
+      .program-card-body p { font-size: 12px; }
+
+      .asym-card { padding: 24px; }
+      .asym-card h4 { font-size: 18px; }
+      .asym-card .stat-large { font-size: 26px; }
+      .asym-card.large img { height: 200px; }
+
+      .section-trainers h2 { font-size: 24px; }
+      .trainer-info h3 { font-size: 20px; }
+      .trainer-row img { max-width: 160px; }
+
+      .section-pricing h2 { font-size: 24px; }
+      .pricing-table td { font-size: 11px; padding: 12px 0; }
+      .pricing-table .btn-table { padding: 6px 12px; font-size: 9px; }
+
+      .cta-text h2 { font-size: 24px; }
+      .mobile-nav-overlay a { font-size: 20px; }
+    }
+
+    /* Совсем маленькие */
+    @media (max-width: 320px) {
+      .hero h1 { font-size: 22px; }
+      .hero-desc { font-size: 12px; }
+      .hero-metrics { gap: 10px; }
+      .metric-value { font-size: 18px; }
+
+      .big-number { font-size: 44px; }
+      .big-number-content h2 { font-size: 20px; }
+      .big-number-content p { font-size: 12px; }
+
+      .program-card { min-width: 220px; }
+      .program-card-image { height: 140px; }
+      .program-card-body h3 { font-size: 15px; }
+      .program-card-body p { font-size: 11px; }
+
+      .asym-card h4 { font-size: 16px; }
+      .asym-card .stat-large { font-size: 22px; }
+      .asym-card.large img { height: 170px; }
+
+      .trainer-row img { max-width: 140px; }
+      .trainer-info h3 { font-size: 18px; }
+
+      .cta-text h2 { font-size: 22px; }
+      .btn { padding: 12px 20px; font-size: 9px; }
     }
   </style>
 </head>
@@ -883,6 +1111,25 @@
       <div class="sidebar-avatar">AG</div>
     </div>
   </aside>
+
+  <!-- ===== МОБИЛЬНАЯ ШАПКА ===== -->
+  <header class="mobile-header">
+    <div class="mobile-logo"><span>A</span></div>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Меню">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <!-- ===== МОБИЛЬНОЕ МЕНЮ ===== -->
+  <div class="mobile-nav-overlay" id="mobileNav">
+    <a href="#hero">Главная</a>
+    <a href="#programs">Программы</a>
+    <a href="#trainers">Тренеры</a>
+    <a href="#pricing">Цены</a>
+    <a href="#cta">Запись</a>
+  </div>
 
   <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
   <div class="main-content">
@@ -1156,6 +1403,25 @@
         links.forEach(link => {
           link.classList.remove('active');
           if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
+        });
+      });
+
+      // Мобильное меню
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const mobileNav = document.getElementById('mobileNav');
+
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileMenuBtn.classList.toggle('active');
+        mobileNav.classList.toggle('active');
+      });
+
+      document.querySelectorAll('.mobile-nav-overlay a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = document.querySelector(link.getAttribute('href'));
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          mobileMenuBtn.classList.remove('active');
+          mobileNav.classList.remove('active');
         });
       });
 
