@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Станислав Шестаков · Портфолио</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Unbounded:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0F0F0F;
+            --surface: #1A1A1A;
+            --surface-light: #222222;
+            --text: #F0EDE8;
+            --text-secondary: #8A8782;
+            --accent: #C8A96E;
+            --accent-dim: rgba(200, 169, 110, 0.12);
+            --border: rgba(255, 255, 255, 0.06);
+            --font-heading: 'Unbounded', sans-serif;
+            --font-body: 'Manrope', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: var(--font-body);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            cursor: none;
+            overflow-x: hidden;
+        }
+
+        /* Кастомный курсор */
+        #cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+            background: transparent;
+        }
+        #cursor.cursor-hover {
+            width: 44px;
+            height: 44px;
+            background: var(--accent-dim);
+            border-color: var(--accent);
+        }
+        #cursor.cursor-active {
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Прелоадер */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .preloader-text {
+            font-family: var(--font-heading);
+            font-weight: 300;
+            font-size: 8vw;
+            color: var(--text);
+            opacity: 0.15;
+            transition: opacity 0.4s ease, color 0.4s ease;
+        }
+        .preloader-text.final {
+            opacity: 1;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* Шапка */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            mix-blend-mode: difference;
+        }
+        .logo {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            color: var(--text);
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+        .logo span {
+            color: var(--accent);
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        .nav-links a {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Секции */
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 6rem 3rem;
+            position: relative;
+        }
+
+        /* Hero */
+        #hero {
+            background: var(--bg);
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-bg-text {
+            position: absolute;
+            top: 50%;
+            right: -5%;
+            transform: translateY(-50%);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 20vw;
+            color: rgba(255, 255, 255, 0.015);
+            white-space: nowrap;
+            pointer-events: none;
+            user-select: none;
+            letter-spacing: -5px;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+        .hero-greeting {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 1rem;
+            color: var(--accent);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+        .hero-name {
+            font-family: var(--font-heading);
+            font-weight: 500;
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 0.95;
+            letter-spacing: -3px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+        .hero-name span {
+            color: var(--accent);
+            display: block;
+            font-weight: 300;
+        }
+        .hero-role {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+        .hero-cta {
+            display: inline-block;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 1rem 2.5rem;
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-decoration: none;
+            transition: background 0.3s ease, color 0.3s ease;
+            cursor: none;
+        }
+        .hero-cta:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        /* О себе */
+        #about {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .about-image {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: var(--bg);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .about-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .about-photo-placeholder {
+            width: 100%;
+            height: 100%;
+            background: var(--surface-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .about-photo-placeholder svg {
+            width: 80px;
+            height: 80px;
+            opacity: 0.3;
+        }
+        .section-number {
+            font-family: var(--font-heading);
+            font-weight: 300;
+            font-size: 5rem;
+            color: var(--accent);
+            opacity: 0.15;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        .section-title {
+            font-family: var(--font-heading);
+            font-weight: 500;
+            font-size: 2.2rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+        .section-text {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+        .skills-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+        .skill-tag {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 0.75rem;
+            color: var(--accent);
+            border: 1px solid rgba(200, 169, 110, 0.3);
+            padding: 0.4rem 1rem;
+            border-radius: 2px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Проекты */
+        #projects {
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+        }
+        .projects-header {
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .project-card {
+            position: relative;
+            background: var(--surface);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid transparent;
+            transition: border-color 0.4s ease, transform 0.4s ease;
+            cursor: none;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+        .project-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-6px);
+        }
+        .project-image {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: var(--surface-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .project-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            padding: 2rem;
+        }
+        .project-logo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .project-logo-placeholder svg {
+            width: 50px;
+            height: 50px;
+            opacity: 0.25;
+        }
+        .project-info {
+            padding: 1.3rem;
+        }
+        .project-category {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 0.4rem;
+        }
+        .project-title {
+            font-family: var(--font-heading);
+            font-weight: 500;
+            font-size: 1rem;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.3rem;
+        }
+        .project-desc {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .project-arrow {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.2rem;
+            font-size: 1.1rem;
+            color: var(--accent);
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            transform: translateX(-10px);
+        }
+        .project-card:hover .project-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Контакты */
+        #contact {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+        .contact-link {
+            font-family: var(--font-heading);
+            font-weight: 400;
+            font-size: 1.5rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            letter-spacing: -0.5px;
+        }
+        .contact-link:hover {
+            color: var(--accent);
+        }
+        .contact-link span {
+            display: block;
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 0.3rem;
+        }
+
+        /* Футер */
+        footer {
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+            padding: 2rem 3rem;
+            text-align: center;
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+        }
+
+        /* Адаптив */
+        @media (max-width: 1024px) {
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            section {
+                padding: 4rem 1.5rem;
+            }
+            .header {
+                padding: 1.5rem;
+            }
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            .contact-links {
+                gap: 2rem;
+            }
+            .contact-link {
+                font-size: 1.2rem;
+            }
+            .hero-bg-text {
+                font-size: 25vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div class="preloader-text" id="preloaderText">01</div>
+    </div>
+
+    <div id="cursor"></div>
+
+    <header class="header">
+        <a href="#" class="logo">СШ<span>.</span></a>
+        <nav class="nav-links">
+            <a href="#about">О себе</a>
+            <a href="#projects">Проекты</a>
+            <a href="#contact">Контакты</a>
+        </nav>
+    </header>
+
+    <section id="hero">
+        <div class="hero-bg-text">PORTFOLIO</div>
+        <div class="hero-content">
+            <p class="hero-greeting">Привет, я</p>
+            <h1 class="hero-name">Станислав<br><span>Шестаков</span></h1>
+            <p class="hero-role">
+                Веб-дизайнер и разработчик. Создаю премиальные цифровые продукты с вниманием к деталям и типографике.
+            </p>
+            <a href="#projects" class="hero-cta">Смотреть проекты</a>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="about-grid">
+            <div class="about-image">
+                <div class="about-photo-placeholder">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" opacity="0.4">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M4 20c0-4 4-7 8-7s8 3 8 7"/>
+                    </svg>
+                </div>
+            </div>
+            <div>
+                <div class="section-number">01</div>
+                <h2 class="section-title">О себе</h2>
+                <p class="section-text">
+                    Я специализируюсь на создании веб-сайтов, которые не только выглядят эффектно, но и решают бизнес-задачи. Мой подход — минимализм, внимание к типографике и удобство пользователя.
+                </p>
+                <p class="section-text">
+                    Работаю с брендами, стартапами и частными клиентами. Каждый проект для меня — возможность создать что-то уникальное.
+                </p>
+                <div class="skills-tags">
+                    <span class="skill-tag">Веб-дизайн</span>
+                    <span class="skill-tag">HTML / CSS / JS</span>
+                    <span class="skill-tag">UX/UI</span>
+                    <span class="skill-tag">Figma</span>
+                    <span class="skill-tag">Типографика</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="projects-header">
+            <div class="section-number">02</div>
+            <h2 class="section-title">Избранные проекты</h2>
+        </div>
+        <div class="projects-grid">
+
+            <!-- Проект 1: Клининг -->
+            <a href="./клининг/index.html" class="project-card" target="_blank">
+                <div class="project-image">
+                    <div class="project-logo-placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" opacity="0.4">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <p class="project-category">Веб-сайт</p>
+                    <h3 class="project-title">Клининговая компания</h3>
+                    <p class="project-desc">Сайт для клининговой компании с формой заказа услуг</p>
+                </div>
+                <span class="project-arrow">↗</span>
+            </a>
+
+            <!-- Проект 2: Барбершоп -->
+            <a href="./барбершоп/index.html" class="project-card" target="_blank">
+                <div class="project-image">
+                    <div class="project-logo-placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" opacity="0.4">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <p class="project-category">Веб-сайт</p>
+                    <h3 class="project-title">Барбершоп</h3>
+                    <p class="project-desc">Атмосферный сайт для мужской парикмахерской с записью</p>
+                </div>
+                <span class="project-arrow">↗</span>
+            </a>
+
+            <!-- Проект 3: Йога -->
+            <a href="./йога/index.html" class="project-card" target="_blank">
+                <div class="project-image">
+                    <div class="project-logo-placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" opacity="0.4">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <p class="project-category">Лендинг</p>
+                    <h3 class="project-title">Йога-студия</h3>
+                    <p class="project-desc">Спокойный и гармоничный лендинг для студии йоги</p>
+                </div>
+                <span class="project-arrow">↗</span>
+            </a>
+
+            <!-- Проект 4: Ресторан -->
+            <a href="./ресторан/index.html" class="project-card" target="_blank">
+                <div class="project-image">
+                    <div class="project-logo-placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" opacity="0.4">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <p class="project-category">Веб-сайт</p>
+                    <h3 class="project-title">Ресторан</h3>
+                    <p class="project-desc">Сайт ресторана с меню, галереей и бронированием столов</p>
+                </div>
+                <span class="project-arrow">↗</span>
+            </a>
+
+            <!-- Проект 5: Фитнес -->
+            <a href="./фитнес/index.html#cta" class="project-card" target="_blank">
+                <div class="project-image">
+                    <div class="project-logo-placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" opacity="0.4">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <p class="project-category">Лендинг</p>
+                    <h3 class="project-title">Фитнес-клуб</h3>
+                    <p class="project-desc">Энергичный лендинг с CTA-секцией и абонементами</p>
+                </div>
+                <span class="project-arrow">↗</span>
+            </a>
+
+            <!-- Проект 6: Конфигуратор -->
+            <a href="./конфигуратор/index.html" class="project-card" target="_blank">
+                <div class="project-image">
+                    <div class="project-logo-placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" opacity="0.4">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <p class="project-category">Веб-приложение</p>
+                    <h3 class="project-title">Конфигуратор</h3>
+                    <p class="project-desc">Интерактивный конфигуратор для подбора товаров</p>
+                </div>
+                <span class="project-arrow">↗</span>
+            </a>
+
+            <!-- Проект 7: Батуты -->
+            <a href="./батуты/index.html#trainers" class="project-card" target="_blank">
+                <div class="project-image">
+                    <div class="project-logo-placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" opacity="0.4">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <p class="project-category">Веб-сайт</p>
+                    <h3 class="project-title">Батутный центр</h3>
+                    <p class="project-desc">Яркий сайт батутного центра с секцией тренеров</p>
+                </div>
+                <span class="project-arrow">↗</span>
+            </a>
+
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="section-number">03</div>
+        <h2 class="section-title">Свяжитесь со мной</h2>
+        <p class="section-text" style="max-width:500px;margin:0 auto;">
+            Открыт для новых проектов и сотрудничества. Напишите мне, и мы обсудим вашу идею.
+        </p>
+        <div class="contact-links">
+            <a href="mailto:your@email.com" class="contact-link">
+                Email
+                <span>your@email.com</span>
+            </a>
+            <a href="https://t.me/yourusername" class="contact-link" target="_blank">
+                Telegram
+                <span>@yourusername</span>
+            </a>
+            <a href="https://github.com/yourusername" class="contact-link" target="_blank">
+                GitHub
+                <span>@yourusername</span>
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        © 2025 · Станислав Шестаков · Сделано с вниманием к деталям
+    </footer>
+
+    <script>
+        (() => {
+            const cursor = document.getElementById('cursor');
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = `${e.clientX}px`;
+                cursor.style.top = `${e.clientY}px`;
+            });
+            document.addEventListener('mousedown', () => cursor.classList.add('cursor-active'));
+            document.addEventListener('mouseup', () => cursor.classList.remove('cursor-active'));
+            const hoverTargets = document.querySelectorAll('a, button, .project-card, .skill-tag');
+            hoverTargets.forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
+            });
+
+            const preloader = document.getElementById('preloader');
+            const preloaderText = document.getElementById('preloaderText');
+            let count = 1;
+            const interval = setInterval(() => {
+                count++;
+                if (count <= 3) {
+                    preloaderText.textContent = `0${count}`;
+                    preloaderText.style.opacity = '0.15';
+                    preloaderText.classList.remove('final');
+                } else if (count === 4) {
+                    preloaderText.textContent = 'ПРИВЕТ';
+                    preloaderText.classList.add('final');
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        preloader.classList.add('hidden');
+                        setTimeout(() => preloader.remove(), 800);
+                    }, 600);
+                }
+            }, 450);
+        })();
+    </script>
+</body>
+</html>
