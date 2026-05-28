@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APEX — Премиальный фитнес-клуб | Москва</title>
+  <meta name="description" content="APEX — фитнес-клуб премиум-класса. Персональные тренировки, групповые программы, спа-зона. Запишитесь на пробное занятие.">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 61,38 95,38 67,57 78,92 50,70 22,92 33,57 5,38 39,38' fill='%23c9a84c'/></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 61,38 95,38 67,57 78,92 50,70 22,92 33,57 5,38 39,38' fill='%23c9a84c'/></svg>">
+  <meta name="theme-color" content="#f8f9fa">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --surface: #ffffff;
+      --border: #e9ecef;
+      --border-strong: #dee2e6;
+      --text: #1a1a1a;
+      --text-secondary: #495057;
+      --text-tertiary: #868e96;
+      --accent: #c9a84c;
+      --accent-dark: #a88a3d;
+      --accent-light: #e8d5a0;
+      --accent-soft: #fdf8ed;
+      --black: #0d0d0d;
+      --dark: #1a1a1a;
+      --radius-xs: 0px;
+      --radius-sm: 0px;
+      --radius: 0px;
+      --radius-lg: 0px;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.06);
+      --shadow-lg: 0 16px 48px rgba(0,0,0,0.08);
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ===== САЙДБАР-НАВИГАЦИЯ ===== */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80px;
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0;
+      transition: var(--transition);
+    }
+
+    .sidebar-logo {
+      width: 44px;
+      height: 44px;
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    }
+
+    .sidebar-logo span {
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar-link {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 18px;
+      position: relative;
+    }
+
+    .sidebar-link:hover {
+      color: var(--text);
+      background: var(--accent-soft);
+      border-radius: 4px;
+    }
+
+    .sidebar-link.active {
+      color: var(--accent-dark);
+    }
+
+    .sidebar-link.active::before {
+      content: '';
+      position: absolute;
+      left: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 20px;
+      background: var(--accent);
+    }
+
+    .sidebar-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--accent-dark);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+    .main-content {
+      margin-left: 80px;
+    }
+
+    /* ===== HERO — ГОРИЗОНТАЛЬНЫЙ БЛОК ===== */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      background: var(--surface);
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 64px;
+      background: var(--black);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(201,168,76,0.08), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-label::after {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 72px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 .outline {
+      -webkit-text-stroke: 1.5px var(--accent);
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      color: #adb5bd;
+      max-width: 400px;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .hero-metrics {
+      display: flex;
+      gap: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .metric-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .metric-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #868e96;
+      margin-top: 4px;
+    }
+
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-right img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.9);
+      transition: transform 0.6s ease;
+    }
+
+    .hero-right:hover img {
+      transform: scale(1.04);
+    }
+
+    .hero-scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      right: 60px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+
+    .btn {
+      padding: 18px 40px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      font-family: 'Inter', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-gold {
+      background: var(--accent);
+      color: var(--black);
+      font-weight: 800;
+    }
+
+    .btn-gold:hover {
+      background: var(--accent-dark);
+      transform: translateX(4px);
+    }
+
+    .btn-outline-light {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.3);
+      color: white;
+      margin-left: 12px;
+    }
+
+    .btn-outline-light:hover {
+      border-color: var(--accent);
+      background: rgba(201,168,76,0.1);
+    }
+
+    /* ===== СЕКЦИЯ С БОЛЬШИМ ЧИСЛОМ ===== */
+    .section-big-number {
+      padding: 100px 64px;
+      background: var(--bg);
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .big-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 160px;
+      font-weight: 900;
+      line-height: 0.8;
+      color: #e9ecef;
+      position: sticky;
+      top: 100px;
+    }
+
+    .big-number-content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 40px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+    }
+
+    .big-number-content p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1.8;
+      font-weight: 300;
+      max-width: 560px;
+    }
+
+    /* ===== КАРТОЧКИ С ГОРИЗОНТАЛЬНЫМ СКРОЛЛОМ ===== */
+    .section-scroll-cards {
+      padding: 60px 0 100px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .scroll-cards-header {
+      padding: 0 64px 40px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+    }
+
+    .scroll-cards-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .scroll-cards-nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    .scroll-arrow {
+      width: 44px;
+      height: 44px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    .scroll-arrow:hover {
+      background: var(--black);
+      color: white;
+      border-color: var(--black);
+    }
+
+    .scroll-cards-track {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      padding: 0 64px 20px;
+      scroll-behavior: smooth;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      cursor: grab;
+    }
+
+    .scroll-cards-track::-webkit-scrollbar { display: none; }
+
+    .scroll-cards-track:active { cursor: grabbing; }
+
+    .program-card {
+      min-width: 360px;
+      max-width: 400px;
+      flex-shrink: 0;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+
+    .program-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .program-card-image {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+    }
+
+    .program-card-body {
+      padding: 28px;
+    }
+
+    .program-card-body h4 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent-dark);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .program-card-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .program-card-body p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    .program-card-body .stats {
+      display: flex;
+      gap: 20px;
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ===== СЕКЦИЯ С АСИММЕТРИЧНОЙ СЕТКОЙ ===== */
+    .section-asymmetric {
+      padding: 100px 64px;
+      background: var(--black);
+      color: white;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 2px;
+    }
+
+    .asym-card {
+      background: #1a1a1a;
+      padding: 48px;
+      transition: var(--transition);
+    }
+
+    .asym-card:hover {
+      background: #222;
+    }
+
+    .asym-card.large {
+      grid-column: span 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .asym-card.large img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      filter: brightness(0.85);
+    }
+
+    .asym-card .icon-circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    .asym-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .asym-card p {
+      color: #adb5bd;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .asym-card .stat-large {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* ===== ТРЕНЕРЫ — ВЕРТИКАЛЬНАЯ ЛЕНТА ===== */
+    .section-trainers {
+      padding: 100px 64px;
+      background: var(--bg);
+    }
+
+    .section-trainers h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 40px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .section-trainers .subtitle {
+      color: var(--text-secondary);
+      margin-bottom: 48px;
+    }
+
+    .trainers-vertical {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .trainer-row {
+      display: grid;
+      grid-template-columns: 300px 1fr 200px;
+      gap: 40px;
+      align-items: center;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .trainer-row:hover {
+      background: var(--accent-soft);
+      padding-left: 20px;
+    }
+
+    .trainer-row img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    .trainer-info h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .trainer-info .specialty {
+      font-size: 11px;
+      color: var(--accent-dark);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .trainer-info p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      max-width: 400px;
+    }
+
+    .trainer-action {
+      text-align: right;
+    }
+
+    .trainer-action .btn-small {
+      padding: 10px 20px;
+      border: 2px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .trainer-action .btn-small:hover {
+      background: var(--black);
+      color: white;
+      border-color: var(--black);
+    }
+
+    /* ===== ПРАЙС-ЛИСТ ТАБЛИЦА ===== */
+    .section-pricing {
+      padding: 100px 64px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+
+    .section-pricing h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 40px;
+      font-weight: 800;
+      margin-bottom: 40px;
+    }
+
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .pricing-table th {
+      text-align: left;
+      padding: 16px 0;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--text-tertiary);
+      border-bottom: 2px solid var(--border);
+      font-weight: 600;
+    }
+
+    .pricing-table td {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .pricing-table tr:hover td {
+      background: var(--accent-soft);
+    }
+
+    .pricing-table .price-cell {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .pricing-table .btn-table {
+      padding: 8px 16px;
+      background: var(--black);
+      color: white;
+      border: none;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+    }
+
+    .pricing-table .btn-table:hover {
+      background: var(--accent);
+    }
+
+    /* ===== ФОРМА ЗАПИСИ — НЕСТАНДАРТНАЯ ===== */
+    .section-cta {
+      padding: 100px 64px;
+      background: var(--black);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+    }
+
+    .cta-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 56px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    .cta-text p {
+      color: #adb5bd;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .cta-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cta-form input {
+      width: 100%;
+      padding: 18px 0;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid rgba(255,255,255,0.2);
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .cta-form input:focus {
+      border-bottom-color: var(--accent);
+    }
+
+    .cta-form input::placeholder {
+      color: #6c757d;
+    }
+
+    .cta-form .btn-gold {
+      margin-top: 16px;
+      align-self: flex-start;
+    }
+
+    /* ===== ФУТЕР МИНИМАЛИСТИЧНЫЙ ===== */
+    .footer-minimal {
+      padding: 32px 64px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .footer-minimal a {
+      color: var(--text-tertiary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-minimal a:hover {
+      color: var(--text);
+    }
+
+    /* ===== ТОСТ ===== */
+    .toast-container {
+      position: fixed;
+      bottom: 32px;
+      left: 112px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      padding: 14px 24px;
+      background: var(--black);
+      color: white;
+      border: 1px solid var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: toastIn 0.4s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .toast.removing { animation: toastOut 0.25s ease forwards; }
+    .toast i { color: var(--accent); }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes toastOut {
+      to { opacity: 0; transform: translateX(-30px); }
+    }
+
+    /* ===== АДАПТИВ ===== */
+    @media (max-width: 1200px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { height: 50vh; }
+      .hero-left { padding: 60px 40px; }
+      .hero h1 { font-size: 48px; }
+      .section-big-number { grid-template-columns: 1fr; padding: 60px 40px; gap: 20px; }
+      .big-number { position: static; font-size: 100px; }
+      .section-asymmetric { grid-template-columns: 1fr 1fr; padding: 60px 40px; }
+      .asym-card.large { grid-column: span 1; }
+      .section-cta { grid-template-columns: 1fr; padding: 60px 40px; gap: 40px; }
+      .cta-text h2 { font-size: 36px; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
+      .hero-left { padding: 40px 20px; }
+      .hero h1 { font-size: 36px; }
+      .section-big-number { padding: 40px 20px; }
+      .scroll-cards-header { padding: 0 20px 20px; flex-direction: column; gap: 12px; }
+      .scroll-cards-track { padding: 0 20px 20px; }
+      .program-card { min-width: 300px; }
+      .section-asymmetric { grid-template-columns: 1fr; padding: 40px 20px; }
+      .trainer-row { grid-template-columns: 1fr; gap: 16px; text-align: center; }
+      .trainer-action { text-align: center; }
+      .section-pricing { padding: 40px 20px; }
+      .pricing-table { font-size: 12px; }
+      .section-cta { padding: 40px 20px; }
+      .footer-minimal { padding: 20px; flex-direction: column; gap: 8px; }
+      .toast-container { left: 16px; bottom: 16px; }
+      .hero-metrics { gap: 20px; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== САЙДБАР ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo"><span>A</span></div>
+    <nav class="sidebar-nav">
+      <a href="#hero" class="sidebar-link active" title="Главная"><i class="fas fa-home"></i></a>
+      <a href="#programs" class="sidebar-link" title="Программы"><i class="fas fa-fire"></i></a>
+      <a href="#trainers" class="sidebar-link" title="Тренеры"><i class="fas fa-user"></i></a>
+      <a href="#pricing" class="sidebar-link" title="Цены"><i class="fas fa-tag"></i></a>
+      <a href="#cta" class="sidebar-link" title="Запись"><i class="fas fa-calendar"></i></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-avatar">AG</div>
+    </div>
+  </aside>
+
+  <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+  <div class="main-content">
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="hero">
+      <div class="hero-left">
+        <div class="hero-label">Премиальный фитнес-клуб</div>
+        <h1>Достигни<br><span class="outline">своего</span><br>пика</h1>
+        <p class="hero-desc">APEX — это пространство, где технологии встречаются с физиологией. Умные тренировки, персональный подход и атмосфера, которая заставляет расти.</p>
+        <div class="hero-metrics">
+          <div><div class="metric-value">2.4K</div><div class="metric-label">м² пространства</div></div>
+          <div><div class="metric-value">40+</div><div class="metric-label">программ</div></div>
+          <div><div class="metric-value">24/7</div><div class="metric-label">доступ</div></div>
+        </div>
+        <div style="margin-top:36px;">
+          <a href="#cta" class="btn btn-gold">Начать тренировку</a>
+          <a href="#programs" class="btn btn-outline-light">Смотреть программы</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=900&h=1200&fit=crop&auto=format" alt="APEX фитнес" loading="eager">
+        <div class="hero-scroll-indicator">
+          <span>Скролл</span>
+          <i class="fas fa-arrow-down"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== БОЛЬШОЕ ЧИСЛО ===== -->
+    <section class="section-big-number">
+      <div class="big-number">01</div>
+      <div class="big-number-content">
+        <h2>Философия<br>движения</h2>
+        <p>Мы объединили спортивную науку, данные биометрии и интуицию лучших тренеров страны. Каждая программа в APEX — это результат анализа тысяч тренировок и индивидуальных показателей.</p>
+        <p style="margin-top:16px;">Никаких шаблонов. Только то, что работает для вашего тела.</p>
+      </div>
+    </section>
+
+    <!-- ===== ГОРИЗОНТАЛЬНЫЙ СКРОЛЛ КАРТОЧЕК ===== -->
+    <section class="section-scroll-cards" id="programs">
+      <div class="scroll-cards-header">
+        <h2>Программы</h2>
+        <div class="scroll-cards-nav">
+          <button class="scroll-arrow" id="scrollLeft"><i class="fas fa-arrow-left"></i></button>
+          <button class="scroll-arrow" id="scrollRight"><i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+      <div class="scroll-cards-track" id="scrollTrack">
+        <div class="program-card">
+          <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&h=400&fit=crop&auto=format" alt="Силовые" class="program-card-image" loading="lazy">
+          <div class="program-card-body">
+            <h4>Силовые</h4>
+            <h3>Power Build</h3>
+            <p>Прогрессивная силовая программа для набора мышечной массы и увеличения силы.</p>
+            <div class="stats"><span>12 недель</span><span>3× в неделю</span></div>
+          </div>
+        </div>
+        <div class="program-card">
+          <img src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?w=600&h=400&fit=crop&auto=format" alt="Кардио" class="program-card-image" loading="lazy">
+          <div class="program-card-body">
+            <h4>Кардио</h4>
+            <h3>Fire Flow</h3>
+            <p>Высокоинтенсивная кардио-программа с элементами функционального тренинга.</p>
+            <div class="stats"><span>8 недель</span><span>4× в неделю</span></div>
+          </div>
+        </div>
+        <div class="program-card">
+          <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&h=400&fit=crop&auto=format" alt="Йога" class="program-card-image" loading="lazy">
+          <div class="program-card-body">
+            <h4>Гибкость</h4>
+            <h3>Apex Flex</h3>
+            <p>Программа развития гибкости и подвижности суставов для всех уровней подготовки.</p>
+            <div class="stats"><span>6 недель</span><span>2× в неделю</span></div>
+          </div>
+        </div>
+        <div class="program-card">
+          <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&h=400&fit=crop&auto=format" alt="Бокс" class="program-card-image" loading="lazy">
+          <div class="program-card-body">
+            <h4>Единоборства</h4>
+            <h3>Strike Lab</h3>
+            <p>Бокс и кикбоксинг для выносливости и координации. Групповые и персональные занятия.</p>
+            <div class="stats"><span>10 недель</span><span>3× в неделю</span></div>
+          </div>
+        </div>
+        <div class="program-card">
+          <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600&h=400&fit=crop&auto=format" alt="Восстановление" class="program-card-image" loading="lazy">
+          <div class="program-card-body">
+            <h4>Восстановление</h4>
+            <h3>Recovery Lab</h3>
+            <p>Программа активного восстановления с массажем, баней и криотерапией.</p>
+            <div class="stats"><span>Постоянно</span><span>Безлимит</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== АСИММЕТРИЧНАЯ СЕТКА ===== -->
+    <section class="section-asymmetric">
+      <div class="asym-card">
+        <div class="icon-circle"><i class="fas fa-dumbbell"></i></div>
+        <h4>Тренажёрный зал</h4>
+        <p>Оборудование Technogym последнего поколения. 120+ тренажёров.</p>
+      </div>
+      <div class="asym-card">
+        <div class="icon-circle"><i class="fas fa-water"></i></div>
+        <h4>Спа и бассейн</h4>
+        <p>25-метровый бассейн, финская сауна, хаммам и джакузи.</p>
+      </div>
+      <div class="asym-card">
+        <div class="icon-circle"><i class="fas fa-heartbeat"></i></div>
+        <h4>Биометрия</h4>
+        <p>InBody-сканирование и персональная аналитика прогресса каждые 2 недели.</p>
+      </div>
+      <div class="asym-card large">
+        <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=900&h=400&fit=crop&auto=format" alt="Зал APEX" loading="lazy">
+      </div>
+      <div class="asym-card">
+        <div class="stat-large">98%</div>
+        <p>клиентов достигают целей в течение первых 3 месяцев.</p>
+      </div>
+    </section>
+
+    <!-- ===== ТРЕНЕРЫ ===== -->
+    <section class="section-trainers" id="trainers">
+      <h2>Команда</h2>
+      <p class="subtitle">Тренеры с международной сертификацией и опытом от 7 лет.</p>
+      <div class="trainers-vertical">
+        <div class="trainer-row">
+          <img src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=400&h=400&fit=crop&auto=format" alt="Максим" loading="lazy">
+          <div class="trainer-info">
+            <h3>Максим Орлов</h3>
+            <div class="specialty">Силовые программы • NSCA-CPT</div>
+            <p>10 лет в индустрии. Специалист по биомеханике движений и силовому тренингу.</p>
+          </div>
+          <div class="trainer-action"><button class="btn-small">Записаться</button></div>
+        </div>
+        <div class="trainer-row">
+          <img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?w=400&h=400&fit=crop&auto=format" alt="Анна" loading="lazy">
+          <div class="trainer-info">
+            <h3>Анна Белова</h3>
+            <div class="specialty">Функциональный тренинг • FMS-специалист</div>
+            <p>8 лет опыта. Эксперт по коррекции осанки и функциональному движению.</p>
+          </div>
+          <div class="trainer-action"><button class="btn-small">Записаться</button></div>
+        </div>
+        <div class="trainer-row">
+          <img src="https://images.unsplash.com/photo-1550345332-09e3ac987658?w=400&h=400&fit=crop&auto=format" alt="Дмитрий" loading="lazy">
+          <div class="trainer-info">
+            <h3>Дмитрий Коваль</h3>
+            <div class="specialty">Бокс • Кикбоксинг • K-1</div>
+            <p>12 лет в единоборствах. Мастер спорта по кикбоксингу.</p>
+          </div>
+          <div class="trainer-action"><button class="btn-small">Записаться</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ТАБЛИЦА ЦЕН ===== -->
+    <section class="section-pricing" id="pricing">
+      <h2>Тарифы</h2>
+      <table class="pricing-table">
+        <thead>
+          <tr><th>Тариф</th><th>Занятия</th><th>Спа</th><th>Тренер</th><th>Цена</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Start</strong></td><td>8 в месяц</td><td>—</td><td>Групповые</td>
+            <td class="price-cell">6 900 ₽</td>
+            <td><button class="btn-table">Выбрать</button></td>
+          </tr>
+          <tr>
+            <td><strong>Pro</strong></td><td>12 в месяц</td><td>✓</td><td>2 персональные</td>
+            <td class="price-cell">14 900 ₽</td>
+            <td><button class="btn-table">Выбрать</button></td>
+          </tr>
+          <tr>
+            <td><strong>Elite</strong></td><td>∞ безлимит</td><td>✓</td><td>4 персональные</td>
+            <td class="price-cell">24 900 ₽</td>
+            <td><button class="btn-table">Выбрать</button></td>
+          </tr>
+          <tr>
+            <td><strong>VIP</strong></td><td>∞ безлимит</td><td>✓ премиум</td><td>Персональный</td>
+            <td class="price-cell">49 900 ₽</td>
+            <td><button class="btn-table">Выбрать</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ===== CTA ФОРМА ===== -->
+    <section class="section-cta" id="cta">
+      <div class="cta-text">
+        <h2>Готов<br>начать?</h2>
+        <p>Оставьте заявку на пробную тренировку. Мы подберём программу под ваши цели и текущий уровень подготовки.</p>
+      </div>
+      <form class="cta-form" id="ctaForm">
+        <input type="text" placeholder="Ваше имя" required>
+        <input type="tel" placeholder="+7 (900) 000-00-00" required>
+        <input type="text" placeholder="Ваша цель (похудение, сила, тонус)">
+        <button type="submit" class="btn btn-gold">Записаться на пробное</button>
+      </form>
+    </section>
+
+    <!-- ===== ФУТЕР ===== -->
+    <footer class="footer-minimal">
+      <span>© 2026 APEX Fitness</span>
+      <a href="#">Instagram</a>
+      <a href="#">Telegram</a>
+      <a href="#">+7 (900) 000-00-00</a>
+    </footer>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    (() => {
+      // Скролл карточек
+      const track = document.getElementById('scrollTrack');
+      const btnLeft = document.getElementById('scrollLeft');
+      const btnRight = document.getElementById('scrollRight');
+
+      btnLeft.addEventListener('click', () => {
+        track.scrollBy({ left: -400, behavior: 'smooth' });
+      });
+
+      btnRight.addEventListener('click', () => {
+        track.scrollBy({ left: 400, behavior: 'smooth' });
+      });
+
+      // Перетаскивание карточек мышью
+      let isDown = false, startX, scrollLeftPos;
+
+      track.addEventListener('mousedown', (e) => {
+        isDown = true;
+        track.style.cursor = 'grabbing';
+        startX = e.pageX - track.offsetLeft;
+        scrollLeftPos = track.scrollLeft;
+      });
+
+      track.addEventListener('mouseleave', () => { isDown = false; track.style.cursor = 'grab'; });
+      track.addEventListener('mouseup', () => { isDown = false; track.style.cursor = 'grab'; });
+
+      track.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - track.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        track.scrollLeft = scrollLeftPos - walk;
+      });
+
+      // Плавный скролл для sidebar-ссылок
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+
+      // Подсветка активной ссылки при скролле
+      window.addEventListener('scroll', () => {
+        const sections = ['hero', 'programs', 'trainers', 'pricing', 'cta'];
+        const links = document.querySelectorAll('.sidebar-link');
+        let current = 'hero';
+        sections.forEach(id => {
+          const el = document.getElementById(id);
+          if (el && window.scrollY >= el.offsetTop - 200) current = id;
+        });
+        links.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
+        });
+      });
+
+      // Тост
+      const showToast = (msg) => {
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.innerHTML = `<i class="fas fa-check-circle"></i> ${msg}`;
+        document.getElementById('toastContainer').appendChild(el);
+        setTimeout(() => { el.classList.add('removing'); el.addEventListener('animationend', () => el.remove()); }, 3000);
+      };
+
+      // Клики по кнопкам
+      document.querySelectorAll('.program-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const name = card.querySelector('h3').textContent;
+          document.getElementById('cta').scrollIntoView({ behavior: 'smooth' });
+          showToast(`Выбрана программа: ${name}`);
+        });
+      });
+
+      document.querySelectorAll('.trainer-row .btn-small').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const name = btn.closest('.trainer-row').querySelector('h3').textContent;
+          document.getElementById('cta').scrollIntoView({ behavior: 'smooth' });
+          showToast(`Запись к тренеру: ${name}`);
+        });
+      });
+
+      document.querySelectorAll('.pricing-table .btn-table').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const plan = btn.closest('tr').querySelector('strong').textContent;
+          document.getElementById('cta').scrollIntoView({ behavior: 'smooth' });
+          showToast(`Выбран тариф: ${plan}`);
+        });
+      });
+
+      document.getElementById('ctaForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = this.querySelector('input[type="text"]').value || 'Гость';
+        showToast(`✅ ${name}, заявка принята! Ждём вас в APEX.`);
+        this.reset();
+      });
+
+      console.log('%c▲ APEX %cFitness %c— Достигни пика',
+        'font-size:20px;font-weight:800;color:#c9a84c;',
+        'font-size:12px;color:#1a1a1a;',
+        'font-size:10px;color:#868e96;');
+    })();
+  </script>
+</body>
+</html>

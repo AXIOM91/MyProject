@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FINNOTE — Заметки и финансы</title>
+  <meta name="description" content="FINNOTE — личный дневник доходов, расходов и заметок. Всё в одном приложении.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='20' y='15' width='60' height='70' rx='8' fill='none' stroke='%236366f1' stroke-width='5'/><line x1='35' y1='35' x2='65' y2='35' stroke='%236366f1' stroke-width='4' stroke-linecap='round'/><line x1='35' y1='50' x2='55' y2='50' stroke='%236366f1' stroke-width='4' stroke-linecap='round'/></svg>">
+  <meta name="theme-color" content="#0f0f1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0c0c18;
+      --surface: #15152a;
+      --surface-hover: #1c1c38;
+      --border: rgba(255,255,255,0.04);
+      --border-strong: rgba(255,255,255,0.08);
+      --text: #e8e6f0;
+      --text-secondary: #8b87a8;
+      --text-tertiary: #565380;
+      --accent: #6c6cf0;
+      --accent-light: #8b8bf7;
+      --accent-glow: rgba(108,108,240,0.15);
+      --accent-soft: rgba(108,108,240,0.06);
+      --success: #3dd68c;
+      --success-soft: rgba(61,214,140,0.08);
+      --danger: #f97066;
+      --danger-soft: rgba(249,112,102,0.08);
+      --warning: #f5c842;
+      --warning-soft: rgba(245,200,66,0.08);
+      --radius: 14px;
+      --radius-sm: 10px;
+      --radius-xs: 8px;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.25);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.35);
+      --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ===== ТОНКАЯ ПОЛОСА САЙДБАРА ===== */
+    .sidebar {
+      width: 68px;
+      min-height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 18px 0;
+      gap: 6px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--accent), #a78bfa);
+      border-radius: var(--radius-xs);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      color: white;
+      margin-bottom: 16px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .sidebar-logo:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 20px var(--accent-glow);
+    }
+
+    .sidebar-link {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-xs);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 17px;
+      position: relative;
+    }
+
+    .sidebar-link:hover {
+      color: var(--text-secondary);
+      background: var(--surface-hover);
+    }
+
+    .sidebar-link.active {
+      color: var(--accent-light);
+      background: var(--accent-soft);
+    }
+
+    .sidebar-link.active::after {
+      content: '';
+      position: absolute;
+      left: -9px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 18px;
+      background: var(--accent);
+      border-radius: 0 3px 3px 0;
+    }
+
+    .sidebar-divider {
+      width: 28px;
+      height: 1px;
+      background: var(--border);
+      margin: 8px 0;
+    }
+
+    /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 36px 44px 48px;
+      gap: 36px;
+    }
+
+    /* ===== ВЕРХНЯЯ СТРОКА ===== */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      border: none;
+      font-family: 'Inter', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-light);
+      box-shadow: 0 8px 24px rgba(108,108,240,0.25);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+    }
+
+    .btn-ghost:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+
+    .btn-xs {
+      padding: 5px 10px;
+      font-size: 10px;
+      border-radius: 6px;
+    }
+
+    /* ===== СТАТИСТИКА ===== */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      transition: var(--transition-smooth);
+      cursor: default;
+    }
+
+    .stat-card:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-card .stat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .stat-card .stat-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .stat-card .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .stat-card .stat-label {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    /* ===== СЕТКА КОНТЕНТА ===== */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-height: 520px;
+    }
+
+    .panel-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .panel-header h3 {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .panel-body::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .panel-body::-webkit-scrollbar-thumb {
+      background: var(--border-strong);
+      border-radius: 2px;
+    }
+
+    /* ===== ЗАМЕТКИ ===== */
+    .note-card {
+      background: var(--surface-hover);
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .note-card:hover {
+      border-color: var(--border-strong);
+      background: var(--surface);
+    }
+
+    .note-card .note-title {
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .note-card .note-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .note-card .note-preview {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .note-card .note-date {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .note-delete {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      opacity: 0;
+    }
+
+    .note-card:hover .note-delete {
+      opacity: 1;
+    }
+
+    .note-delete:hover {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    /* ===== ТРАНЗАКЦИИ ===== */
+    .transaction-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--border);
+      transition: var(--transition);
+    }
+
+    .transaction-row:last-child {
+      border-bottom: none;
+    }
+
+    .tx-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .tx-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tx-info .tx-name {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .tx-info .tx-cat {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .tx-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .tx-amount.in { color: var(--success); }
+    .tx-amount.out { color: var(--danger); }
+
+    .tx-delete {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      opacity: 0;
+      flex-shrink: 0;
+    }
+
+    .transaction-row:hover .tx-delete {
+      opacity: 1;
+    }
+
+    .tx-delete:hover {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    /* ===== БЫСТРОЕ ДОБАВЛЕНИЕ ===== */
+    .quick-add-bar {
+      display: flex;
+      gap: 8px;
+      padding: 10px 14px;
+      border-top: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .quick-add-bar input,
+    .quick-add-bar select {
+      padding: 9px 12px;
+      border-radius: 100px;
+      background: var(--surface-hover);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .quick-add-bar input:focus,
+    .quick-add-bar select:focus {
+      border-color: var(--accent);
+    }
+
+    .quick-add-bar input {
+      flex: 1;
+    }
+    .quick-add-bar .q-amount {
+      width: 100px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .quick-add-bar select {
+      width: 90px;
+    }
+
+    .circle-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .circle-btn:hover {
+      background: var(--accent-light);
+      transform: scale(1.06);
+    }
+
+    /* ===== МОДАЛКА ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 28px;
+      width: 90%;
+      max-width: 440px;
+      animation: slideUp 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .modal h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .modal .sub {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-bottom: 18px;
+    }
+
+    .modal .form-group {
+      margin-bottom: 10px;
+    }
+
+    .modal .form-group label {
+      display: block;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-tertiary);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .modal .form-input,
+    .modal textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: var(--radius-xs);
+      background: var(--surface-hover);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      outline: none;
+      transition: var(--transition);
+      resize: vertical;
+    }
+
+    .modal textarea {
+      min-height: 90px;
+    }
+
+    .modal .form-input:focus,
+    .modal textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-glow);
+    }
+
+    .modal .btn {
+      width: 100%;
+      justify-content: center;
+      padding: 12px;
+      border-radius: var(--radius-xs);
+      margin-top: 4px;
+    }
+
+    .modal .btn-ghost {
+      margin-top: 4px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ===== ТОСТ ===== */
+    .toast-container {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .toast {
+      padding: 12px 20px;
+      border-radius: 100px;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      animation: toastIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .toast.removing { animation: toastOut 0.2s ease forwards; }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(40px) scale(0.9); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    @keyframes toastOut {
+      to { opacity: 0; transform: translateX(40px) scale(0.9); }
+    }
+
+    /* Пустое состояние */
+    .empty {
+      text-align: center;
+      padding: 28px 16px;
+      color: var(--text-tertiary);
+      font-size: 12px;
+    }
+
+    .empty i {
+      font-size: 28px;
+      margin-bottom: 8px;
+      opacity: 0.3;
+    }
+
+    /* ===== СТРАНИЦЫ ===== */
+    .page { display: none; flex-direction: column; gap: 28px; }
+    .page.active { display: flex; }
+
+    @media (max-width: 900px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .main-content { padding: 24px 20px; }
+    }
+
+    @media (max-width: 600px) {
+      .sidebar { display: none; }
+      .main-content { padding: 18px 12px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== ТОНКИЙ САЙДБАР ===== -->
+  <nav class="sidebar">
+    <div class="sidebar-logo"><i class="fas fa-book-open"></i></div>
+    <div class="sidebar-link active" data-page="overview" title="Обзор"><i class="fas fa-compass"></i></div>
+    <div class="sidebar-link" data-page="notes" title="Заметки"><i class="fas fa-sticky-note"></i></div>
+    <div class="sidebar-link" data-page="finance" title="Финансы"><i class="fas fa-chart-pie"></i></div>
+  </nav>
+
+  <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+  <main class="main-content" id="mainContent">
+    <!-- ОБЗОР -->
+    <div class="page active" id="page-overview">
+      <div class="topbar">
+        <h1>Обзор</h1>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" onclick="openNoteModal()"><i class="fas fa-plus"></i> Заметка</button>
+          <button class="btn btn-primary" onclick="openTxModal()"><i class="fas fa-plus"></i> Транзакция</button>
+        </div>
+      </div>
+      <div class="stats-row" id="statsRow"></div>
+      <div class="content-grid">
+        <div class="panel">
+          <div class="panel-header"><h3>Последние заметки</h3><button class="btn btn-xs btn-ghost" onclick="switchPage('notes')">Все →</button></div>
+          <div class="panel-body" id="recentNotes"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h3>Последние транзакции</h3><button class="btn btn-xs btn-ghost" onclick="switchPage('finance')">Все →</button></div>
+          <div class="panel-body" id="recentTx"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ЗАМЕТКИ -->
+    <div class="page" id="page-notes">
+      <div class="topbar">
+        <h1>Заметки</h1>
+        <button class="btn btn-primary" onclick="openNoteModal()"><i class="fas fa-plus"></i> Новая заметка</button>
+      </div>
+      <div class="panel" style="max-height:none;">
+        <div class="panel-header"><h3>Все заметки</h3></div>
+        <div class="panel-body" id="allNotes" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;"></div>
+      </div>
+    </div>
+
+    <!-- ФИНАНСЫ -->
+    <div class="page" id="page-finance">
+      <div class="topbar">
+        <h1>Доходы и расходы</h1>
+        <button class="btn btn-primary" onclick="openTxModal()"><i class="fas fa-plus"></i> Транзакция</button>
+      </div>
+      <div class="panel" style="max-height:none;">
+        <div class="panel-header"><h3>Все транзакции</h3></div>
+        <div class="panel-body" id="allTx"></div>
+        <div class="quick-add-bar">
+          <input type="text" id="qName" placeholder="Название">
+          <input type="number" id="qAmount" placeholder="Сумма" class="q-amount">
+          <select id="qType"><option value="income">Доход</option><option value="expense">Расход</option></select>
+          <button class="circle-btn" onclick="addQuickTx()"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    (() => {
+      // Данные
+      let notes = JSON.parse(localStorage.getItem('fn_notes')) || [
+        { id: 1, title: 'Идеи для проекта', content: 'Продумать архитектуру и стек', date: '2026-05-25', color: '#6c6cf0' },
+        { id: 2, title: 'Список покупок', content: 'Молоко, хлеб, авокадо, яйца', date: '2026-05-26', color: '#f472b6' },
+        { id: 3, title: 'Книги к прочтению', content: 'Atomic Habits, Deep Work, Sapiens', date: '2026-05-27', color: '#3dd68c' },
+      ];
+
+      let tx = JSON.parse(localStorage.getItem('fn_tx')) || [
+        { id: 1, name: 'Зарплата', amount: 150000, type: 'income', cat: 'Работа', date: '2026-05-25', icon: '💼', color: '#3dd68c' },
+        { id: 2, name: 'Аренда', amount: 45000, type: 'expense', cat: 'Жильё', date: '2026-05-24', icon: '🏠', color: '#f97066' },
+        { id: 3, name: 'Продукты', amount: 8500, type: 'expense', cat: 'Еда', date: '2026-05-26', icon: '🛒', color: '#f97066' },
+        { id: 4, name: 'Фриланс', amount: 35000, type: 'income', cat: 'Подработка', date: '2026-05-23', icon: '💻', color: '#3dd68c' },
+        { id: 5, name: 'Ресторан', amount: 4200, type: 'expense', cat: 'Развлечения', date: '2026-05-27', icon: '🍽️', color: '#f97066' },
+      ];
+
+      const save = () => {
+        localStorage.setItem('fn_notes', JSON.stringify(notes));
+        localStorage.setItem('fn_tx', JSON.stringify(tx));
+      };
+
+      const $ = (s) => document.querySelector(s);
+      const $$ = (s) => document.querySelectorAll(s);
+      const fmt = (n) => n.toLocaleString('ru-RU');
+      const now = () => new Date().toISOString().split('T')[0];
+
+      // Тост
+      const toast = (msg) => {
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.innerHTML = `<i class="fas fa-circle-check" style="color:#6c6cf0;"></i> ${msg}`;
+        $('#toastContainer').appendChild(el);
+        setTimeout(() => { el.classList.add('removing'); el.addEventListener('animationend', () => el.remove()); }, 2400);
+      };
+
+      // Статистика
+      const renderStats = () => {
+        const monthTx = tx.filter(t => new Date(t.date).getMonth() === new Date().getMonth());
+        const inc = monthTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+        const exp = monthTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+
+        const stats = [
+          { icon: '↓', label: 'Доходы', val: fmt(inc) + ' ₽', bg: 'rgba(61,214,140,0.08)', col: '#3dd68c' },
+          { icon: '↑', label: 'Расходы', val: fmt(exp) + ' ₽', bg: 'rgba(249,112,102,0.08)', col: '#f97066' },
+          { icon: '=', label: 'Баланс', val: fmt(inc - exp) + ' ₽', bg: 'rgba(108,108,240,0.08)', col: '#6c6cf0' },
+          { icon: '✎', label: 'Заметок', val: notes.length + ' шт.', bg: 'rgba(245,200,66,0.08)', col: '#f5c842' },
+        ];
+
+        $('#statsRow').innerHTML = stats.map(s => `
+          <div class="stat-card">
+            <div class="stat-header"><div class="stat-icon" style="background:${s.bg};color:${s.col};">${s.icon}</div></div>
+            <div class="stat-value">${s.val}</div>
+            <div class="stat-label">${s.label}</div>
+          </div>`).join('');
+      };
+
+      // Заметки
+      const renderNotes = (containerId, limit = null) => {
+        const el = $(`#${containerId}`);
+        if (!el) return;
+        const list = limit ? notes.slice(-limit).reverse() : [...notes].reverse();
+        if (!list.length) { el.innerHTML = '<div class="empty"><i class="fas fa-sticky-note"></i><p>Пока нет заметок</p></div>'; return; }
+        el.innerHTML = list.map(n => `
+          <div class="note-card">
+            <div class="note-title"><span class="note-dot" style="background:${n.color};"></span>${n.title}</div>
+            <div class="note-preview">${n.content}</div>
+            <div class="note-date">${n.date}</div>
+            <button class="note-delete" data-id="${n.id}"><i class="fas fa-times"></i></button>
+          </div>`).join('');
+
+        el.querySelectorAll('.note-delete').forEach(b => b.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = +b.dataset.id;
+          const name = notes.find(n => n.id === id)?.title;
+          notes = notes.filter(n => n.id !== id);
+          save(); renderAll(); toast(`Заметка «${name}» удалена`);
+        }));
+      };
+
+      // Транзакции
+      const renderTx = (containerId, limit = null) => {
+        const el = $(`#${containerId}`);
+        if (!el) return;
+        const list = limit ? tx.slice(-limit).reverse() : [...tx].reverse();
+        if (!list.length) { el.innerHTML = '<div class="empty"><i class="fas fa-chart-pie"></i><p>Нет транзакций</p></div>'; return; }
+        el.innerHTML = list.map(t => `
+          <div class="transaction-row">
+            <div class="tx-icon" style="background:${t.color}15;color:${t.color};">${t.icon}</div>
+            <div class="tx-info"><div class="tx-name">${t.name}</div><div class="tx-cat">${t.cat}</div></div>
+            <div class="tx-amount ${t.type === 'income' ? 'in' : 'out'}">${t.type === 'income' ? '+' : '−'}${fmt(t.amount)} ₽</div>
+            <button class="tx-delete" data-id="${t.id}"><i class="fas fa-times"></i></button>
+          </div>`).join('');
+
+        el.querySelectorAll('.tx-delete').forEach(b => b.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = +b.dataset.id;
+          const name = tx.find(t => t.id === id)?.name;
+          tx = tx.filter(t => t.id !== id);
+          save(); renderAll(); toast(`Транзакция «${name}» удалена`);
+        }));
+      };
+
+      // Модалки
+      const openNoteModal = () => {
+        const overlay = document.createElement('div'); overlay.className = 'modal-overlay';
+        overlay.innerHTML = `<div class="modal"><h3>Новая заметка</h3><p class="sub">Запиши мысль или задачу</p>
+          <div class="form-group"><label>Заголовок</label><input class="form-input" id="ntitle" placeholder="Заголовок"></div>
+          <div class="form-group"><label>Содержание</label><textarea id="ncontent" placeholder="Текст..."></textarea></div>
+          <button class="btn btn-primary" id="nsave">Сохранить</button><button class="btn btn-ghost cancel">Отмена</button></div>`;
+        document.body.appendChild(overlay);
+        const close = () => overlay.remove();
+        overlay.querySelector('.cancel').onclick = close;
+        overlay.onclick = (e) => { if (e.target === overlay) close(); };
+        overlay.querySelector('#nsave').onclick = () => {
+          const title = overlay.querySelector('#ntitle').value.trim();
+          const content = overlay.querySelector('#ncontent').value.trim();
+          if (!title) return toast('Введи заголовок');
+          notes.push({ id: Date.now(), title, content, date: now(), color: ['#6c6cf0','#f472b6','#3dd68c','#f5c842'][Math.floor(Math.random()*4)] });
+          save(); renderAll(); toast(`«${title}» сохранена`); close();
+        };
+      };
+
+      const openTxModal = () => {
+        const overlay = document.createElement('div'); overlay.className = 'modal-overlay';
+        overlay.innerHTML = `<div class="modal"><h3>Транзакция</h3><p class="sub">Доход или расход</p>
+          <div class="form-group"><label>Название</label><input class="form-input" id="txname" placeholder="Например: Кофе"></div>
+          <div class="form-group"><label>Сумма</label><input type="number" class="form-input" id="txamount" placeholder="1000"></div>
+          <div class="form-group"><label>Тип</label><select class="form-input" id="txtype"><option value="income">Доход</option><option value="expense" selected>Расход</option></select></div>
+          <button class="btn btn-primary" id="txsave">Добавить</button><button class="btn btn-ghost cancel">Отмена</button></div>`;
+        document.body.appendChild(overlay);
+        const close = () => overlay.remove();
+        overlay.querySelector('.cancel').onclick = close;
+        overlay.onclick = (e) => { if (e.target === overlay) close(); };
+        overlay.querySelector('#txsave').onclick = () => {
+          const name = overlay.querySelector('#txname').value.trim();
+          const amount = +overlay.querySelector('#txamount').value;
+          const type = overlay.querySelector('#txtype').value;
+          if (!name || !amount) return toast('Заполни все поля');
+          tx.push({ id: Date.now(), name, amount, type, date: now(), cat: type === 'income' ? 'Доход' : 'Расход', icon: type === 'income' ? '💰' : '💸', color: type === 'income' ? '#3dd68c' : '#f97066' });
+          save(); renderAll(); toast(`${type === 'income' ? '📈' : '📉'} ${name}: ${fmt(amount)} ₽`); close();
+        };
+      };
+
+      const addQuickTx = () => {
+        const name = $('#qName')?.value.trim();
+        const amount = +$('#qAmount')?.value;
+        const type = $('#qType')?.value;
+        if (!name || !amount) return toast('Введи название и сумму');
+        tx.push({ id: Date.now(), name, amount, type, date: now(), cat: type === 'income' ? 'Доход' : 'Расход', icon: type === 'income' ? '💰' : '💸', color: type === 'income' ? '#3dd68c' : '#f97066' });
+        save(); renderAll();
+        $('#qName').value = ''; $('#qAmount').value = '';
+        toast(`${name}: ${fmt(amount)} ₽`);
+      };
+
+      // Навигация
+      const switchPage = (page) => {
+        $$('.page').forEach(p => p.classList.remove('active'));
+        $$('.sidebar-link').forEach(l => l.classList.remove('active'));
+        $(`#page-${page}`).classList.add('active');
+        document.querySelector(`.sidebar-link[data-page="${page}"]`)?.classList.add('active');
+        renderAll();
+      };
+
+      $$('.sidebar-link').forEach(l => l.addEventListener('click', () => switchPage(l.dataset.page)));
+
+      const renderAll = () => {
+        renderStats();
+        renderNotes('recentNotes', 4);
+        renderTx('recentTx', 5);
+        renderNotes('allNotes');
+        renderTx('allTx');
+      };
+
+      window.switchPage = switchPage;
+      window.openNoteModal = openNoteModal;
+      window.openTxModal = openTxModal;
+      window.addQuickTx = addQuickTx;
+
+      renderAll();
+      console.log('%c📒 FINNOTE %c— гармония заметок и финансов',
+        'font-size:14px;font-weight:700;color:#6c6cf0;',
+        'font-size:10px;color:#8b87a8;');
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>IRON WILL · Боксёрский клуб · Краснодар</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Unbounded:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0F0F0F;
+            --surface: #1A1A1A;
+            --text: #F0EDE8;
+            --text-secondary: #8A8782;
+            --accent: #C8A96E;
+            --accent-dim: rgba(200, 169, 110, 0.15);
+            --border: rgba(255, 255, 255, 0.06);
+            --font-heading: 'Unbounded', sans-serif;
+            --font-body: 'Manrope', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: var(--font-body);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            cursor: none;
+            overflow-x: hidden;
+        }
+
+        /* Кастомный курсор */
+        #cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+            background: transparent;
+        }
+        #cursor.cursor-hover {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-dim);
+            border-color: var(--accent);
+        }
+        #cursor.cursor-active {
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Прелоадер */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .preloader-number {
+            font-family: var(--font-heading);
+            font-weight: 300;
+            font-size: 12vw;
+            color: var(--text);
+            opacity: 0.15;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .preloader-number.final {
+            opacity: 1;
+            color: var(--accent);
+            font-weight: 500;
+            transform: scale(1.05);
+        }
+
+        /* Шапка */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            mix-blend-mode: difference;
+        }
+        .logo {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: var(--text);
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+        .logo span {
+            color: var(--accent);
+        }
+        .menu-btn {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: none;
+            border: none;
+            cursor: none;
+            padding: 8px;
+            z-index: 101;
+        }
+        .menu-btn span {
+            display: block;
+            width: 28px;
+            height: 2px;
+            background: var(--text);
+            transition: transform 0.35s ease, opacity 0.35s ease, width 0.35s ease;
+        }
+        .menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+            width: 24px;
+        }
+        .menu-btn.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        .menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+            width: 24px;
+        }
+
+        /* Меню-оверлей */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 15, 15, 0.98);
+            z-index: 99;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .menu-overlay nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+        .menu-overlay nav a {
+            font-family: var(--font-heading);
+            font-weight: 300;
+            font-size: clamp(2rem, 5vw, 4rem);
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s ease, letter-spacing 0.3s ease;
+            letter-spacing: -1px;
+        }
+        .menu-overlay nav a:hover {
+            color: var(--accent);
+            letter-spacing: 2px;
+        }
+        .menu-overlay .menu-number {
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-right: 1rem;
+            font-weight: 400;
+        }
+
+        /* Секции */
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 6rem 3rem;
+            position: relative;
+        }
+
+        /* Hero */
+        #hero {
+            background: var(--bg);
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-bg-text {
+            position: absolute;
+            top: 50%;
+            left: -5%;
+            transform: translateY(-50%);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 25vw;
+            color: rgba(255, 255, 255, 0.02);
+            white-space: nowrap;
+            pointer-events: none;
+            user-select: none;
+            letter-spacing: -2px;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+        }
+        .hero-number {
+            font-family: var(--font-heading);
+            font-weight: 300;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 2rem;
+            letter-spacing: 4px;
+        }
+        .hero-title {
+            font-family: var(--font-heading);
+            font-weight: 500;
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            line-height: 0.95;
+            letter-spacing: -3px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+        .hero-title span {
+            color: var(--accent);
+            display: block;
+            font-weight: 300;
+        }
+        .hero-desc {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 480px;
+            line-height: 1.6;
+        }
+
+        /* Инфо-блоки */
+        .info-section {
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+            padding: 6rem 3rem;
+        }
+        .info-section.light {
+            background: var(--surface);
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .info-number {
+            font-family: var(--font-heading);
+            font-weight: 300;
+            font-size: 6rem;
+            color: var(--accent);
+            opacity: 0.2;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+        .info-title {
+            font-family: var(--font-heading);
+            font-weight: 500;
+            font-size: 2.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+        .info-text {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 500px;
+        }
+        .info-image {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            overflow: hidden;
+            position: relative;
+            border-radius: 4px;
+        }
+        .info-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(30%) brightness(0.8);
+            transition: filter 0.5s ease, transform 0.5s ease;
+        }
+        .info-image:hover img {
+            filter: grayscale(0%) brightness(0.9);
+            transform: scale(1.03);
+        }
+
+        /* Тренеры */
+        .trainers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .trainer-card {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 3/4;
+            background: var(--surface);
+            border-radius: 4px;
+        }
+        .trainer-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(30%) brightness(0.7);
+            transition: filter 0.5s ease, transform 0.5s ease;
+        }
+        .trainer-card:hover img {
+            filter: grayscale(0%) brightness(0.85);
+            transform: scale(1.03);
+        }
+        .trainer-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        }
+        .trainer-name {
+            font-family: var(--font-heading);
+            font-weight: 500;
+            font-size: 1.3rem;
+            color: var(--text);
+        }
+        .trainer-role {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-top: 0.3rem;
+        }
+
+        /* Абонементы */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .price-card {
+            background: var(--surface);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border: 1px solid transparent;
+            transition: border-color 0.4s ease, transform 0.4s ease;
+            border-radius: 4px;
+        }
+        .price-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-6px);
+        }
+        .price-card.featured {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+        }
+        .price-title {
+            font-family: var(--font-heading);
+            font-weight: 500;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+        .price-value {
+            font-family: var(--font-heading);
+            font-weight: 300;
+            font-size: 3rem;
+            color: var(--accent);
+            margin: 1.5rem 0;
+        }
+        .price-btn, .cta-btn {
+            display: inline-block;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 0.8rem 2rem;
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-decoration: none;
+            transition: background 0.3s ease, color 0.3s ease;
+            cursor: none;
+        }
+        .price-btn:hover, .cta-btn:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 8rem 3rem;
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+        }
+        .cta-title {
+            font-family: var(--font-heading);
+            font-weight: 300;
+            font-size: clamp(2rem, 5vw, 4rem);
+            letter-spacing: -1px;
+            margin-bottom: 2rem;
+        }
+        .cta-title strong {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Модальное окно */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 3rem;
+            max-width: 480px;
+            width: 90%;
+            border-radius: 4px;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.4s ease;
+        }
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: none;
+            transition: color 0.3s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close:hover {
+            color: var(--accent);
+        }
+        .modal-title {
+            font-family: var(--font-heading);
+            font-weight: 500;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-group label {
+            display: block;
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.8rem 1rem;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+            cursor: none;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .form-submit {
+            width: 100%;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 1rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: none;
+            border-radius: 4px;
+            transition: background 0.3s, color 0.3s;
+            margin-top: 1rem;
+        }
+        .form-submit:hover {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        /* Футер */
+        footer {
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+            padding: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        footer a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        footer a:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            section, .info-section, .cta-section {
+                padding: 4rem 1.5rem;
+            }
+            .header {
+                padding: 1.5rem;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .trainers-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-bg-text {
+                font-size: 30vw;
+            }
+            footer {
+                flex-direction: column;
+                text-align: center;
+            }
+            .modal {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Прелоадер -->
+    <div id="preloader">
+        <div class="preloader-number" id="preloaderNumber">01</div>
+    </div>
+
+    <!-- Кастомный курсор -->
+    <div id="cursor"></div>
+
+    <!-- Шапка -->
+    <header class="header">
+        <a href="#" class="logo">IRON<span>.</span>WILL</a>
+        <button class="menu-btn" id="menuBtn" aria-label="Меню">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <!-- Меню -->
+    <div class="menu-overlay" id="menuOverlay">
+        <nav>
+            <a href="#hero"><span class="menu-number">01</span> Главная</a>
+            <a href="#boxing"><span class="menu-number">02</span> Бокс</a>
+            <a href="#kids"><span class="menu-number">03</span> Дети</a>
+            <a href="#trainers"><span class="menu-number">04</span> Тренеры</a>
+            <a href="#pricing"><span class="menu-number">05</span> Абонементы</a>
+        </nav>
+    </div>
+
+    <!-- Hero -->
+    <section id="hero">
+        <div class="hero-bg-text">BOXING</div>
+        <div class="hero-content">
+            <div class="hero-number">01</div>
+            <h1 class="hero-title">
+                Бокс<br><span>закаляет</span><br>характер
+            </h1>
+            <p class="hero-desc">
+                Бокс — не только отличное мужское хобби. Это крепкая физическая форма, выносливость, навыки самообороны и антистресс.
+            </p>
+        </div>
+    </section>
+
+    <!-- Бокс -->
+    <section id="boxing" class="info-section">
+        <div class="info-grid">
+            <div>
+                <div class="info-number">02</div>
+                <h2 class="info-title">Классический бокс</h2>
+                <p class="info-text">
+                    Бокс называют шахматами на ринге. Выигрывает тактически более грамотный соперник. Научиться этому боевому искусству под силу каждому. В «IRON WILL» на пути к цели вас поддержат опытный тренер и новые друзья.
+                </p>
+            </div>
+            <div class="info-image">
+                <img src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800&h=600&fit=crop" alt="Боксёрский ринг" loading="lazy">
+            </div>
+        </div>
+    </section>
+
+    <!-- Дети -->
+    <section id="kids" class="info-section light">
+        <div class="info-grid">
+            <div class="info-image">
+                <img src="https://images.unsplash.com/photo-1616760198799-7f4d7b19b479?w=800&h=600&fit=crop" alt="Детская секция бокса" loading="lazy">
+            </div>
+            <div>
+                <div class="info-number">03</div>
+                <h2 class="info-title">Детские группы</h2>
+                <p class="info-text">
+                    Единоборства закаляют характер, дисциплинируют, учат давать отпор и бороться за победу. Занятия строятся по индивидуальной программе, помогают улучшить результат и подтянуть слабые стороны.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Тренеры -->
+    <section id="trainers" class="info-section">
+        <div style="max-width:1400px;margin:0 auto;width:100%;">
+            <div class="info-number">04</div>
+            <h2 class="info-title" style="margin-bottom:3rem;">Тренерский состав</h2>
+            <div class="trainers-grid">
+                <div class="trainer-card">
+                    <img src="https://images.unsplash.com/photo-1574278747880-2df68e8bbf68?w=500&h=700&fit=crop" alt="Тренер Алексей Волков" loading="lazy">
+                    <div class="trainer-info">
+                        <div class="trainer-name">Алексей Волков</div>
+                        <div class="trainer-role">Мастер спорта по боксу</div>
+                    </div>
+                </div>
+                <div class="trainer-card">
+                    <img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?w=500&h=700&fit=crop" alt="Тренер Дмитрий Ростов" loading="lazy">
+                    <div class="trainer-info">
+                        <div class="trainer-name">Дмитрий Ростов</div>
+                        <div class="trainer-role">КМС, чемпион ЮФО</div>
+                    </div>
+                </div>
+                <div class="trainer-card">
+                    <img src="https://images.unsplash.com/photo-1552072092-7f9b8d63efcb?w=500&h=700&fit=crop" alt="Тренер Артём Савельев" loading="lazy">
+                    <div class="trainer-info">
+                        <div class="trainer-name">Артём Савельев</div>
+                        <div class="trainer-role">Тренер детских групп</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Абонементы -->
+    <section id="pricing" class="info-section light">
+        <div style="max-width:1400px;margin:0 auto;width:100%;">
+            <div class="info-number">05</div>
+            <h2 class="info-title" style="margin-bottom:3rem;">Абонементы</h2>
+            <div class="pricing-grid">
+                <div class="price-card">
+                    <div class="price-title">8 тренировок</div>
+                    <div class="price-value">12 000 ₽</div>
+                    <button class="price-btn modal-trigger" data-plan="8 тренировок">Выбрать</button>
+                </div>
+                <div class="price-card featured">
+                    <div class="price-title">12 тренировок</div>
+                    <div class="price-value">16 000 ₽</div>
+                    <button class="price-btn modal-trigger" data-plan="12 тренировок">Выбрать</button>
+                </div>
+                <div class="price-card">
+                    <div class="price-title">Детский</div>
+                    <div class="price-value">8 000 ₽</div>
+                    <button class="price-btn modal-trigger" data-plan="Детский">Выбрать</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="cta-title">
+            Готов <strong>выйти на ринг</strong>?
+        </div>
+        <button class="cta-btn modal-trigger" data-plan="Пробное занятие">Записаться на тренировку</button>
+    </section>
+
+    <!-- Модальное окно записи -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="modal-close" id="modalClose">✕</button>
+            <div class="modal-title">Запись на тренировку</div>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="name">Имя</label>
+                    <input type="text" id="name" placeholder="Ваше имя" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Телефон</label>
+                    <input type="tel" id="phone" placeholder="+7 (900) 000-00-00" required>
+                </div>
+                <div class="form-group">
+                    <label for="plan">Тариф</label>
+                    <select id="plan" required>
+                        <option value="">Выберите тариф</option>
+                        <option value="Пробное занятие">Пробное занятие</option>
+                        <option value="8 тренировок">8 тренировок — 12 000 ₽</option>
+                        <option value="12 тренировок">12 тренировок — 16 000 ₽</option>
+                        <option value="Детский">Детский — 8 000 ₽</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">Комментарий</label>
+                    <textarea id="message" rows="3" placeholder="Укажите удобное время или задайте вопрос"></textarea>
+                </div>
+                <button type="submit" class="form-submit">Отправить заявку</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Футер -->
+    <footer>
+        <span>IRON WILL © 2026 · Боксёрский клуб</span>
+        <span>Краснодар, ул. Красная, 101</span>
+        <span><a href="mailto:info@ironwill.ru">info@ironwill.ru</a></span>
+    </footer>
+
+    <script>
+        (() => {
+            // Кастомный курсор
+            const cursor = document.getElementById('cursor');
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = `${e.clientX}px`;
+                cursor.style.top = `${e.clientY}px`;
+            });
+            document.addEventListener('mousedown', () => cursor.classList.add('cursor-active'));
+            document.addEventListener('mouseup', () => cursor.classList.remove('cursor-active'));
+            const hoverTargets = document.querySelectorAll('a, button, .trainer-card, .price-card, .info-image, .menu-btn, input, select, textarea, .form-submit');
+            hoverTargets.forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
+            });
+
+            // Прелоадер
+            const preloader = document.getElementById('preloader');
+            const preloaderNumber = document.getElementById('preloaderNumber');
+            let count = 1;
+            const interval = setInterval(() => {
+                count++;
+                if (count <= 3) {
+                    preloaderNumber.textContent = `0${count}`;
+                    preloaderNumber.style.opacity = '0.15';
+                    preloaderNumber.classList.remove('final');
+                } else if (count === 4) {
+                    preloaderNumber.textContent = 'IRON WILL';
+                    preloaderNumber.classList.add('final');
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        preloader.classList.add('hidden');
+                        setTimeout(() => preloader.remove(), 800);
+                    }, 700);
+                }
+            }, 450);
+
+            // Меню
+            const menuBtn = document.getElementById('menuBtn');
+            const menuOverlay = document.getElementById('menuOverlay');
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+            });
+            document.querySelectorAll('.menu-overlay nav a').forEach(link => {
+                link.addEventListener('click', () => {
+                    menuBtn.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                });
+            });
+
+            // Модальное окно
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalClose = document.getElementById('modalClose');
+            const signupForm = document.getElementById('signupForm');
+            const planSelect = document.getElementById('plan');
+
+            // Открытие модального окна по всем кнопкам
+            document.querySelectorAll('.modal-trigger').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const plan = btn.getAttribute('data-plan');
+                    if (plan && planSelect) {
+                        // Ищем соответствующий option
+                        const options = planSelect.options;
+                        for (let i = 0; i < options.length; i++) {
+                            if (options[i].value === plan || options[i].text.includes(plan)) {
+                                planSelect.value = options[i].value;
+                                break;
+                            }
+                        }
+                    }
+                    modalOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            // Закрытие модального окна
+            function closeModal() {
+                modalOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            modalClose.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) closeModal();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+
+            // Отправка формы
+            signupForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('name').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const plan = planSelect.value;
+                const message = document.getElementById('message').value.trim();
+
+                if (!name || !phone || !plan) {
+                    alert('Пожалуйста, заполните обязательные поля: Имя, Телефон и Тариф.');
+                    return;
+                }
+
+                // Имитация отправки
+                const submitBtn = signupForm.querySelector('.form-submit');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Отправка...';
+                submitBtn.disabled = true;
+
+                setTimeout(() => {
+                    alert(`Спасибо, ${name}! Ваша заявка на тариф "${plan}" принята. Мы свяжемся с вами в ближайшее время.`);
+                    signupForm.reset();
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    closeModal();
+                }, 1000);
+            });
+        })();
+    </script>
+</body>
+</html>

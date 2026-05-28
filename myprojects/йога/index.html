@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRANA — Студия йоги и осознанности</title>
+  <meta name="description" content="PRANA — премиальная студия йоги. Хатха, Виньяса, Кундалини, медитации. Запишитесь на первое занятие со скидкой 60%.">
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='none' stroke='%2399a58f' stroke-width='5' opacity='0.7'/><circle cx='50' cy='35' r='8' fill='%2399a58f' opacity='0.8'/></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='none' stroke='%2399a58f' stroke-width='5' opacity='0.7'/><circle cx='50' cy='35' r='8' fill='%2399a58f' opacity='0.8'/></svg>">
+  <meta name="theme-color" content="#f5f2ec">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg: #f5f2ec;
+      --surface: #faf9f5;
+      --border: #e5e0d6;
+      --border-light: #ede8de;
+      --text: #2b2a26;
+      --text-secondary: #6b6962;
+      --text-tertiary: #9b9890;
+      --accent: #99a58f;
+      --accent-dark: #7d8b74;
+      --accent-light: #c5cebf;
+      --accent-soft: #edf0ea;
+      --stone: #c4beb4;
+      --clay: #bfa58a;
+      --clay-soft: #f5efe8;
+      --radius-sm: 10px;
+      --radius: 18px;
+      --radius-lg: 26px;
+      --radius-xl: 34px;
+      --shadow-xs: 0 1px 2px rgba(0,0,0,0.03);
+      --shadow-sm: 0 4px 14px rgba(0,0,0,0.04);
+      --shadow-md: 0 12px 30px rgba(0,0,0,0.05);
+      --shadow-lg: 0 24px 50px rgba(0,0,0,0.07);
+      --transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --transition-spring: 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+      --transition-slow: 0.7s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Анимированный фон */
+    .bg-ambient {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 15% 20%, rgba(153,165,143,0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 75%, rgba(191,165,138,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(153,165,143,0.03) 0%, transparent 70%);
+      animation: ambientShift 20s ease-in-out infinite;
+    }
+
+    @keyframes ambientShift {
+      0%, 100% { opacity: 0.7; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.03); }
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== ХЕДЕР ===== */
+    .header {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 96px);
+      max-width: 1192px;
+      z-index: 100;
+      background: rgba(250,249,245,0.65);
+      backdrop-filter: blur(28px) saturate(160%);
+      -webkit-backdrop-filter: blur(28px) saturate(160%);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.4s ease;
+    }
+
+    .header.scrolled {
+      background: rgba(250,249,245,0.88);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .logo-symbol {
+      width: 38px;
+      height: 38px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-symbol svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .logo-symbol .circle-outline {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 2.5;
+      opacity: 0.6;
+      animation: logoRotate 12s linear infinite;
+      transform-origin: center;
+    }
+
+    .logo-symbol .circle-dot {
+      fill: var(--accent);
+      opacity: 0.7;
+      animation: logoBreathe 4s ease-in-out infinite;
+    }
+
+    @keyframes logoRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes logoBreathe {
+      0%, 100% { r: 7; opacity: 0.7; }
+      50% { r: 9; opacity: 1; }
+    }
+
+    .logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+    }
+
+    .nav-link {
+      padding: 9px 18px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: var(--transition);
+      cursor: pointer;
+      letter-spacing: 0.8px;
+    }
+
+    .nav-link:hover {
+      color: var(--text);
+      background: var(--accent-soft);
+    }
+
+    .nav-cta {
+      background: var(--accent);
+      color: white !important;
+      font-weight: 500;
+      padding: 10px 22px;
+      margin-left: 6px;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(153,165,143,0.25);
+    }
+
+    /* ===== HERO С ПАРАЛЛАКСОМ ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-image {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 55%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
+      pointer-events: none;
+      animation: heroParallax 8s ease-in-out infinite alternate;
+      filter: brightness(1.02) saturate(0.9);
+      mask-image: linear-gradient(to left, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 100%);
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 100%);
+    }
+
+    @keyframes heroParallax {
+      0% { transform: scale(1.05) translateY(0); }
+      100% { transform: scale(1) translateY(-20px); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 540px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 100px;
+      background: var(--accent-soft);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--accent-dark);
+      margin-bottom: 32px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-badge .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: softPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes softPulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.6); }
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 72px;
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      margin-bottom: 24px;
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent-dark);
+      position: relative;
+    }
+
+    .hero h1 em::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--accent-soft);
+      border-radius: 2px;
+      z-index: -1;
+    }
+
+    .hero-desc {
+      font-size: 17px;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      line-height: 1.8;
+      font-weight: 350;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s ease 0.3s both;
+    }
+
+    .btn {
+      padding: 16px 34px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-spring);
+      border: none;
+      font-family: 'Inter', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+      letter-spacing: 0.6px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(153,165,143,0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      transform: translateY(-2px);
+    }
+
+    .hero-floating-card {
+      position: absolute;
+      bottom: 80px;
+      right: 8%;
+      z-index: 2;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      box-shadow: var(--shadow-md);
+      animation: floatCard 6s ease-in-out infinite, fadeUp 0.8s ease 0.4s both;
+    }
+
+    @keyframes floatCard {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .hero-floating-card .time {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 500;
+      color: var(--accent-dark);
+      line-height: 1;
+    }
+
+    .hero-floating-card .label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--text-tertiary);
+      margin-top: 4px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== СЕКЦИИ ===== */
+    .section {
+      padding: 120px 0;
+      position: relative;
+    }
+
+    .section-center {
+      text-align: center;
+    }
+
+    .section-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: var(--accent-dark);
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 52px;
+      font-weight: 400;
+      letter-spacing: -0.5px;
+      margin-bottom: 18px;
+      line-height: 1.12;
+    }
+
+    .section-subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin: 0 auto 64px;
+      line-height: 1.7;
+      font-weight: 350;
+    }
+
+    /* ===== ПРАКТИКИ С АНИМАЦИЕЙ ===== */
+    .practices-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .practice-card {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 44px 28px 32px;
+      transition: var(--transition-spring);
+      cursor: pointer;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .practice-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .practice-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 0 0 3px 3px;
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .practice-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-8px);
+    }
+
+    .practice-card:hover::before {
+      opacity: 1;
+    }
+
+    .practice-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 22px;
+      transition: var(--transition-spring);
+    }
+
+    .practice-card:hover .practice-icon-wrap {
+      background: var(--accent-light);
+      transform: scale(1.08) rotate(-5deg);
+    }
+
+    .practice-card h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .practice-card .level {
+      font-size: 10px;
+      color: var(--accent-dark);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .practice-card p {
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.6;
+      font-weight: 350;
+    }
+
+    /* ===== РАСПИСАНИЕ ===== */
+    .schedule-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .schedule-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 130px 110px;
+      gap: 16px;
+      align-items: center;
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border-light);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .schedule-row:last-child { border-bottom: none; }
+    .schedule-row:hover { background: var(--accent-soft); }
+
+    .schedule-day {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--accent-dark);
+    }
+
+    .schedule-class h5 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .schedule-class span {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      font-weight: 400;
+    }
+
+    .schedule-time {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .schedule-btn {
+      padding: 9px 20px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1.5px solid var(--accent);
+      background: transparent;
+      color: var(--accent-dark);
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+
+    .schedule-btn:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* ===== ИНСТРУКТОРЫ ===== */
+    .teachers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .teacher-card {
+      text-align: center;
+      transition: var(--transition-spring);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .teacher-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .teacher-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .teacher-image-wrap {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 22px;
+    }
+
+    .teacher-image {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .teacher-card:hover .teacher-image {
+      box-shadow: var(--shadow-md);
+      transform: scale(1.04);
+    }
+
+    .teacher-image-ring {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 2px solid var(--accent-light);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .teacher-card:hover .teacher-image-ring {
+      opacity: 0.5;
+      transform: scale(1.06);
+    }
+
+    .teacher-card h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .teacher-card .specialty {
+      font-size: 10px;
+      color: var(--accent-dark);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .teacher-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 350;
+      max-width: 260px;
+      margin: 0 auto;
+    }
+
+    /* ===== ЦЕНЫ ===== */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 44px 28px;
+      text-align: center;
+      transition: var(--transition-spring);
+      position: relative;
+    }
+
+    .pricing-card.featured {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-md);
+      background: linear-gradient(180deg, #fafdf7 0%, #faf9f5 100%);
+    }
+
+    .pricing-card.featured::after {
+      content: '✓ Популярный выбор';
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: white;
+      padding: 5px 18px;
+      border-radius: 100px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .pricing-card h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+
+    .pricing-card .price {
+      font-size: 56px;
+      font-weight: 300;
+      color: var(--accent-dark);
+      margin-bottom: 4px;
+      font-family: 'Cormorant Garamond', serif;
+      letter-spacing: -1px;
+    }
+
+    .pricing-card .period {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .pricing-card ul {
+      list-style: none;
+      margin-bottom: 28px;
+    }
+
+    .pricing-card ul li {
+      padding: 7px 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 350;
+      position: relative;
+    }
+
+    .pricing-card ul li::before {
+      content: '—';
+      color: var(--accent);
+      margin-right: 8px;
+      opacity: 0.5;
+    }
+
+    /* ===== ФОРМА ===== */
+    .trial-wrapper {
+      background: linear-gradient(160deg, #f8faf4 0%, #f5f2ec 100%);
+      border: 1px solid var(--accent-light);
+      border-radius: var(--radius-xl);
+      padding: 64px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .trial-info h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 400;
+      margin-bottom: 14px;
+      line-height: 1.15;
+    }
+
+    .trial-info .highlight {
+      font-size: 18px;
+      color: var(--accent-dark);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .trial-info p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      font-weight: 350;
+    }
+
+    .trial-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: 100px;
+      background: white;
+      border: 2px solid var(--border-light);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .form-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 6px rgba(153,165,143,0.08);
+    }
+
+    .form-input::placeholder { color: var(--text-tertiary); }
+
+    /* ===== ФУТЕР ===== */
+    .footer {
+      padding: 56px 0 32px;
+      border-top: 1px solid var(--border-light);
+      text-align: center;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: var(--transition-spring);
+      font-size: 15px;
+    }
+
+    .footer-social a:hover {
+      border-color: var(--accent);
+      color: var(--accent-dark);
+      background: var(--accent-soft);
+      transform: translateY(-3px);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 400;
+      transition: var(--transition);
+      letter-spacing: 0.5px;
+    }
+
+    .footer-links a:hover { color: var(--accent-dark); }
+
+    .footer-copy {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      font-weight: 350;
+    }
+
+    /* ===== ТОСТ ===== */
+    .toast-container {
+      position: fixed;
+      bottom: 36px;
+      right: 36px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      padding: 15px 24px;
+      border-radius: 100px;
+      background: white;
+      border: 1px solid var(--accent-light);
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      animation: toastIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: var(--shadow-md);
+    }
+
+    .toast.removing { animation: toastOut 0.25s ease forwards; }
+    .toast i { color: var(--accent-dark); font-size: 15px; }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(50px) scale(0.9); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    @keyframes toastOut {
+      to { opacity: 0; transform: translateX(50px) scale(0.9); }
+    }
+
+    /* ===== АДАПТИВ ===== */
+    @media (max-width: 1100px) {
+      .hero-bg-image { width: 45%; }
+      .hero h1 { font-size: 50px; }
+      .practices-grid { grid-template-columns: repeat(2, 1fr); }
+      .teachers-grid { grid-template-columns: repeat(2, 1fr); }
+      .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+      .trial-wrapper { grid-template-columns: 1fr; padding: 40px; }
+      .section-title { font-size: 38px; }
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 0 20px; }
+      .header { width: calc(100% - 28px); padding: 10px 16px; border-radius: 50px; }
+      .nav-links { display: none; }
+      .hero { padding-top: 80px; min-height: auto; padding-bottom: 60px; }
+      .hero-bg-image { display: none; }
+      .hero h1 { font-size: 38px; }
+      .hero-content { max-width: 100%; }
+      .hero-floating-card { display: none; }
+      .section { padding: 72px 0; }
+      .section-title { font-size: 30px; }
+      .practices-grid { grid-template-columns: 1fr; }
+      .teachers-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .schedule-row { grid-template-columns: 1fr; gap: 8px; text-align: center; padding: 18px 20px; }
+      .trial-wrapper { padding: 28px; }
+      .toast-container { left: 14px; right: 14px; bottom: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-ambient"></div>
+
+  <!-- ===== ХЕДЕР ===== -->
+  <header class="header" id="header">
+    <a href="#" class="logo">
+      <div class="logo-symbol">
+        <svg viewBox="0 0 40 40">
+          <circle class="circle-outline" cx="20" cy="20" r="17"/>
+          <circle class="circle-dot" cx="20" cy="12" r="4"/>
+        </svg>
+      </div>
+      <span class="logo-text">prana</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#practices" class="nav-link">Практики</a>
+      <a href="#schedule" class="nav-link">Расписание</a>
+      <a href="#teachers" class="nav-link">Инструкторы</a>
+      <a href="#pricing" class="nav-link">Цены</a>
+      <a href="#trial" class="nav-link nav-cta">Пробное занятие</a>
+    </nav>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1000&h=1200&fit=crop&auto=format" alt="Йога" class="hero-bg-image" loading="eager">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="dot"></span> Студия йоги и осознанности
+        </div>
+        <h1>
+          Дыши<br>
+          <em>глубже</em>
+        </h1>
+        <p class="hero-desc">
+          PRANA — это пространство, где тело обретает гибкость, ум — ясность, а сердце — покой. Практикуй с нами в самом центре города.
+        </p>
+        <div class="hero-btns">
+          <a href="#trial" class="btn btn-primary">
+            <i class="fas fa-spa"></i> Первое занятие — 500 ₽
+          </a>
+          <a href="#practices" class="btn btn-outline">
+            <i class="fas fa-arrow-down"></i> Выбрать практику
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-floating-card">
+      <div class="time">07:30</div>
+      <div class="label">Утренний поток • Пн–Сб</div>
+    </div>
+  </section>
+
+  <!-- ===== ПРАКТИКИ ===== -->
+  <section class="section section-center" id="practices">
+    <div class="container">
+      <span class="section-label">Направления</span>
+      <h2 class="section-title">Выбери свою<br>практику</h2>
+      <p class="section-subtitle">Шесть направлений — от мягкой инь-йоги до энергичной виньясы. Каждое занятие ведёт сертифицированный инструктор.</p>
+
+      <div class="practices-grid" id="practicesGrid">
+        <div class="practice-card" data-practice="Хатха-йога">
+          <div class="practice-icon-wrap">🧘</div>
+          <h4>Хатха-йога</h4>
+          <div class="level">Все уровни</div>
+          <p>Классические асаны и пранаяма для баланса тела и ума.</p>
+        </div>
+        <div class="practice-card" data-practice="Виньяса-флоу">
+          <div class="practice-icon-wrap">🌊</div>
+          <h4>Виньяса-флоу</h4>
+          <div class="level">Средний • Продвинутый</div>
+          <p>Динамичная связка поз в ритме дыхания. Энергия и сила.</p>
+        </div>
+        <div class="practice-card" data-practice="Кундалини">
+          <div class="practice-icon-wrap">🔥</div>
+          <h4>Кундалини</h4>
+          <div class="level">Все уровни</div>
+          <p>Пробуждение энергии через крийи, мантры и медитацию.</p>
+        </div>
+        <div class="practice-card" data-practice="Инь-йога">
+          <div class="practice-icon-wrap">🌙</div>
+          <h4>Инь-йога</h4>
+          <div class="level">Все уровни</div>
+          <p>Медленная практика с длительным удержанием поз для глубокого расслабления.</p>
+        </div>
+        <div class="practice-card" data-practice="Медитация">
+          <div class="practice-icon-wrap">🕯️</div>
+          <h4>Медитация</h4>
+          <div class="level">Все уровни</div>
+          <p>Направляемые медитации для ясности ума и внутреннего покоя.</p>
+        </div>
+        <div class="practice-card" data-practice="Йога-нидра">
+          <div class="practice-icon-wrap">✨</div>
+          <h4>Йога-нидра</h4>
+          <div class="level">Все уровни</div>
+          <p>Глубокое расслабление на грани сна. Один час = четыре часа отдыха.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== РАСПИСАНИЕ ===== -->
+  <section class="section section-center" id="schedule" style="background: #f8f7f2;">
+    <div class="container">
+      <span class="section-label">Расписание</span>
+      <h2 class="section-title">Регулярные<br>занятия</h2>
+      <p class="section-subtitle">Присоединяйтесь к практике в удобное время. Расписание обновляется ежемесячно.</p>
+
+      <div class="schedule-wrapper">
+        <div class="schedule-row"><div class="schedule-day">Пн</div><div class="schedule-class"><h5>Хатха-йога</h5><span>с Анной</span></div><div class="schedule-time">08:00–09:15</div><button class="schedule-btn">Запись</button></div>
+        <div class="schedule-row"><div class="schedule-day">Вт</div><div class="schedule-class"><h5>Виньяса-флоу</h5><span>с Артёмом</span></div><div class="schedule-time">19:00–20:15</div><button class="schedule-btn">Запись</button></div>
+        <div class="schedule-row"><div class="schedule-day">Ср</div><div class="schedule-class"><h5>Кундалини</h5><span>с Еленой</span></div><div class="schedule-time">07:30–08:45</div><button class="schedule-btn">Запись</button></div>
+        <div class="schedule-row"><div class="schedule-day">Чт</div><div class="schedule-class"><h5>Инь-йога</h5><span>с Дианой</span></div><div class="schedule-time">20:00–21:15</div><button class="schedule-btn">Запись</button></div>
+        <div class="schedule-row"><div class="schedule-day">Сб</div><div class="schedule-class"><h5>Медитация</h5><span>с Анной</span></div><div class="schedule-time">10:00–11:00</div><button class="schedule-btn">Запись</button></div>
+        <div class="schedule-row"><div class="schedule-day">Вс</div><div class="schedule-class"><h5>Йога-нидра</h5><span>с Еленой</span></div><div class="schedule-time">18:00–19:00</div><button class="schedule-btn">Запись</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ИНСТРУКТОРЫ ===== -->
+  <section class="section section-center" id="teachers">
+    <div class="container">
+      <span class="section-label">Команда</span>
+      <h2 class="section-title">Проводники<br>к осознанности</h2>
+      <p class="section-subtitle">Каждый инструктор PRANA — практик с многолетним опытом и глубоким пониманием философии йоги.</p>
+
+      <div class="teachers-grid" id="teachersGrid">
+        <div class="teacher-card">
+          <div class="teacher-image-wrap">
+            <div class="teacher-image-ring"></div>
+            <img src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=400&h=400&fit=crop&auto=format" alt="Анна" class="teacher-image" loading="lazy">
+          </div>
+          <h4>Анна Светлова</h4>
+          <div class="specialty">Хатха • Медитация</div>
+          <p>10 лет практики. Сертификат International Yoga Alliance.</p>
+        </div>
+        <div class="teacher-card">
+          <div class="teacher-image-wrap">
+            <div class="teacher-image-ring"></div>
+            <img src="https://images.unsplash.com/photo-1562088287-bde35a1ea917?w=400&h=400&fit=crop&auto=format" alt="Артём" class="teacher-image" loading="lazy">
+          </div>
+          <h4>Артём Ветров</h4>
+          <div class="specialty">Виньяса • Кундалини</div>
+          <p>8 лет практики. Специалист по динамическим направлениям.</p>
+        </div>
+        <div class="teacher-card">
+          <div class="teacher-image-wrap">
+            <div class="teacher-image-ring"></div>
+            <img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?w=400&h=400&fit=crop&auto=format" alt="Елена" class="teacher-image" loading="lazy">
+          </div>
+          <h4>Елена Райс</h4>
+          <div class="specialty">Инь-йога • Йога-нидра</div>
+          <p>12 лет практики. Проводит ретриты по глубокому расслаблению.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ЦЕНЫ ===== -->
+  <section class="section section-center" id="pricing">
+    <div class="container">
+      <span class="section-label">Цены</span>
+      <h2 class="section-title">Выбери<br>свой формат</h2>
+      <p class="section-subtitle">Прозрачные тарифы без скрытых условий. Начни с пробного занятия.</p>
+
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h4>Разовое</h4>
+          <div class="price">1 200</div>
+          <div class="period">₽ / занятие</div>
+          <ul><li>Одно занятие</li><li>Любое направление</li><li>Коврик в подарок</li></ul>
+          <button class="btn btn-outline" style="width:100%;justify-content:center;">Выбрать</button>
+        </div>
+        <div class="pricing-card featured">
+          <h4>Месяц</h4>
+          <div class="price">4 900</div>
+          <div class="period">₽ / месяц</div>
+          <ul><li>12 занятий в месяц</li><li>Все направления</li><li>Чайная церемония</li><li>Скидка 20% на ретриты</li></ul>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;">Выбрать</button>
+        </div>
+        <div class="pricing-card">
+          <h4>Безлимит</h4>
+          <div class="price">7 900</div>
+          <div class="period">₽ / месяц</div>
+          <ul><li>∞ занятий</li><li>Все направления</li><li>Личный шкафчик</li><li>Приоритетная запись</li></ul>
+          <button class="btn btn-outline" style="width:100%;justify-content:center;">Выбрать</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ПРОБНОЕ ЗАНЯТИЕ ===== -->
+  <section class="section" id="trial">
+    <div class="container">
+      <div class="trial-wrapper">
+        <div class="trial-info">
+          <span class="section-label">Начните сегодня</span>
+          <h3>Пробное занятие<br>всего за 500 ₽</h3>
+          <p class="highlight">Скидка 60% на первое посещение</p>
+          <p>Оставьте заявку — мы подберём удобное время и направление для знакомства с PRANA.</p>
+        </div>
+        <form class="trial-form" id="trialForm">
+          <input type="text" class="form-input" placeholder="Ваше имя" required>
+          <input type="tel" class="form-input" placeholder="+7 (999) 123-45-67" required>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+            <i class="fas fa-spa"></i> Записаться на пробное
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ФУТЕР ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-social">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-telegram"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+        <a href="#"><i class="fab fa-vk"></i></a>
+      </div>
+      <div class="footer-links">
+        <a href="#practices">Практики</a>
+        <a href="#schedule">Расписание</a>
+        <a href="#teachers">Инструкторы</a>
+        <a href="#pricing">Цены</a>
+        <a href="#">Конфиденциальность</a>
+        <a href="#">+7 (900) 000-00-00</a>
+      </div>
+      <p class="footer-copy">© 2026 PRANA Yoga Studio. Дыши глубже.</p>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    (() => {
+      const header = document.getElementById('header');
+      window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 50));
+
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const t = document.querySelector(this.getAttribute('href'));
+          if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      const showToast = (msg) => {
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.innerHTML = `<i class="fas fa-spa"></i> ${msg}`;
+        document.getElementById('toastContainer').appendChild(el);
+        setTimeout(() => { el.classList.add('removing'); el.addEventListener('animationend', () => el.remove()); }, 3200);
+      };
+
+      // Intersection Observer — анимация появления карточек
+      const observerOptions = { threshold: 0.2, rootMargin: '0px 0px -40px 0px' };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.practice-card, .teacher-card').forEach(el => observer.observe(el));
+
+      // Клик по практике → скролл к форме
+      document.querySelectorAll('.practice-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const name = card.dataset.practice;
+          document.getElementById('trial').scrollIntoView({ behavior: 'smooth' });
+          showToast(`Выбрана практика: ${name}`);
+        });
+      });
+
+      // Кнопки записи в расписании
+      document.querySelectorAll('.schedule-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const row = btn.closest('.schedule-row');
+          const className = row.querySelector('.schedule-class h5').textContent;
+          document.getElementById('trial').scrollIntoView({ behavior: 'smooth' });
+          showToast(`Запись на: ${className}`);
+        });
+      });
+
+      // Кнопки тарифов
+      document.querySelectorAll('.pricing-card .btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const card = btn.closest('.pricing-card');
+          const planName = card.querySelector('h4').textContent;
+          document.getElementById('trial').scrollIntoView({ behavior: 'smooth' });
+          showToast(`Выбран тариф: ${planName}`);
+        });
+      });
+
+      // Форма
+      document.getElementById('trialForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = this.querySelector('input[type="text"]').value || 'Гость';
+        showToast(`✅ ${name}, заявка принята! Ждём вас в студии.`);
+        this.reset();
+      });
+
+      console.log('%c🕉️ PRANA %cYoga %c— Дыши глубже',
+        'font-size:20px;font-weight:400;color:#99a58f;',
+        'font-size:12px;color:#6b6962;',
+        'font-size:10px;color:#9b9890;');
+    })();
+  </script>
+</body>
+</html>

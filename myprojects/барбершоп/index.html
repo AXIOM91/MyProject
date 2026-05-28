@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLADE — Премиальный барбершоп</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --bg-light: #1a1a1a;
+      --surface: #141414;
+      --surface-2: #1e1e1e;
+      --border: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.1);
+      --text: #e8e0d5;
+      --text-secondary: #9a9085;
+      --text-tertiary: #5c5650;
+      --accent: #c9a84c;
+      --accent-light: #e0c878;
+      --accent-glow: rgba(201,168,76,0.2);
+      --accent-soft: rgba(201,168,76,0.08);
+      --warm-red: #b8453a;
+      --warm-red-soft: rgba(184,69,58,0.1);
+      --leather: #5c3d2e;
+      --leather-light: #8b5e3c;
+      --wood: #3d2b1f;
+      --charcoal: #2a2a2a;
+      --radius-xs: 4px;
+      --radius-sm: 8px;
+      --radius: 12px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --shadow-sm: 0 4px 20px rgba(0,0,0,0.3);
+      --shadow-md: 0 12px 40px rgba(0,0,0,0.5);
+      --shadow-lg: 0 24px 64px rgba(0,0,0,0.6);
+      --shadow-gold: 0 8px 32px rgba(201,168,76,0.15);
+      --transition: 0.35s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+      --transition-slow: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Декоративная текстура */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 90%, rgba(184,69,58,0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.02) 0%, transparent 70%);
+      animation: bgShift 15s ease-in-out infinite;
+    }
+
+    @keyframes bgShift {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== ХЕДЕР ===== */
+    .header {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 80px);
+      max-width: 1200px;
+      z-index: 100;
+      background: rgba(20,20,20,0.75);
+      backdrop-filter: blur(30px) saturate(150%);
+      -webkit-backdrop-filter: blur(30px) saturate(150%);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.35s ease;
+    }
+
+    .header.scrolled {
+      background: rgba(20,20,20,0.9);
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #c9a84c, #8b6914);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #1a1a1a;
+      box-shadow: 0 6px 24px var(--accent-glow);
+      transition: var(--transition-slow);
+      transform: rotate(45deg);
+    }
+
+    .logo-mark i {
+      transform: rotate(-45deg);
+    }
+
+    .logo:hover .logo-mark {
+      box-shadow: 0 10px 32px rgba(201,168,76,0.35);
+      transform: rotate(50deg);
+    }
+
+    .logo-text {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    .logo-text span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .nav-link {
+      padding: 10px 20px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: var(--transition);
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #1a1a1a !important;
+      font-weight: 700;
+      padding: 11px 24px;
+      margin-left: 4px;
+      box-shadow: 0 4px 20px var(--accent-glow);
+      letter-spacing: 1.5px;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent-light);
+      box-shadow: 0 8px 28px rgba(201,168,76,0.3);
+      transform: translateY(-2px);
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 80px;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-radius: 4px;
+      background: var(--accent-soft);
+      border-left: 3px solid var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 32px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-badge .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: softPulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes softPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(1.5); }
+    }
+
+    .hero h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 80px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      animation: fadeUp 0.6s ease 0.1s both;
+    }
+
+    .hero h1 .gold {
+      color: var(--accent);
+      position: relative;
+    }
+
+    .hero h1 .gold::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--accent);
+      opacity: 0.3;
+    }
+
+    .hero-desc {
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 420px;
+      margin-bottom: 36px;
+      line-height: 1.7;
+      animation: fadeUp 0.6s ease 0.2s both;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s ease 0.3s both;
+    }
+
+    .btn {
+      padding: 16px 34px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-slow);
+      border: none;
+      font-family: 'Inter', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .btn-gold {
+      background: var(--accent);
+      color: #1a1a1a;
+      box-shadow: 0 8px 28px var(--accent-glow);
+    }
+
+    .btn-gold:hover {
+      background: var(--accent-light);
+      box-shadow: 0 14px 40px rgba(201,168,76,0.35);
+      transform: translateY(-3px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--border-strong);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      transform: translateY(-2px);
+    }
+
+    .hero-image-wrap {
+      position: relative;
+      animation: fadeUp 0.6s ease 0.2s both;
+    }
+
+    .hero-image-main {
+      width: 100%;
+      aspect-ratio: 3/4;
+      border-radius: var(--radius-lg);
+      object-fit: cover;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      filter: brightness(0.9) contrast(1.1);
+    }
+
+    .hero-image-badge {
+      position: absolute;
+      bottom: -20px;
+      left: -20px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      padding: 16px 20px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-radius: var(--radius-xs);
+    }
+
+    .hero-image-badge .icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .hero-image-badge .text strong {
+      display: block;
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      letter-spacing: 1px;
+    }
+
+    .hero-image-badge .text span {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(36px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== СЕКЦИИ ===== */
+    .section {
+      padding: 120px 0;
+      position: relative;
+    }
+
+    .section-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: inline-block;
+      padding: 6px 16px;
+      background: var(--accent-soft);
+      border-radius: 2px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .section-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 52px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+
+    .section-subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin-bottom: 52px;
+      line-height: 1.7;
+    }
+
+    /* ===== УСЛУГИ ===== */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .service-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: var(--transition-slow);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .service-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-gold);
+      transform: translateY(-8px);
+    }
+
+    .service-card-image {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      filter: brightness(0.85) contrast(1.1);
+      transition: var(--transition);
+    }
+
+    .service-card:hover .service-card-image {
+      filter: brightness(1) contrast(1.05);
+    }
+
+    .service-card-body {
+      padding: 24px;
+    }
+
+    .service-card-body h4 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .service-card-body .duration {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .service-card-body p {
+      color: var(--text-secondary);
+      font-size: 13px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .service-price {
+      font-family: 'Oswald', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    /* ===== МАСТЕРА ===== */
+    .masters-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .master-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: var(--transition-slow);
+      text-align: center;
+    }
+
+    .master-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-gold);
+      transform: translateY(-6px);
+    }
+
+    .master-image {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      filter: brightness(0.9) contrast(1.1);
+      transition: var(--transition);
+    }
+
+    .master-card:hover .master-image {
+      filter: brightness(1) contrast(1.05);
+    }
+
+    .master-card-body {
+      padding: 24px 20px;
+    }
+
+    .master-card-body h4 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .master-card-body .role {
+      font-size: 11px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .master-card-body p {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* ===== ИНТЕРЬЕР ===== */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .gallery-item {
+      aspect-ratio: 1;
+      border-radius: var(--radius-xs);
+      overflow: hidden;
+      cursor: pointer;
+      transition: var(--transition-slow);
+      border: 2px solid transparent;
+    }
+
+    .gallery-item:hover {
+      border-color: var(--accent);
+      transform: scale(1.04);
+      box-shadow: var(--shadow-gold);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.85) contrast(1.1);
+      transition: var(--transition);
+    }
+
+    .gallery-item:hover img {
+      filter: brightness(1.05) contrast(1);
+    }
+
+    .gallery-item.large {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
+    /* ===== ПРОЦЕСС ===== */
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .process-step {
+      text-align: center;
+      padding: 40px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: var(--transition-slow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .process-step::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .process-step:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-gold);
+      transform: translateY(-4px);
+    }
+
+    .process-step:hover::before {
+      opacity: 1;
+    }
+
+    .step-num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--accent);
+      opacity: 0.3;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+    }
+
+    .process-step h4 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .process-step p {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ===== ОТЗЫВЫ ===== */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .review-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: var(--transition-slow);
+    }
+
+    .review-card:hover {
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-3px);
+    }
+
+    .review-stars {
+      color: var(--accent);
+      margin-bottom: 14px;
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+
+    .review-text {
+      font-size: 14px;
+      margin-bottom: 18px;
+      line-height: 1.7;
+      color: var(--text);
+      font-style: italic;
+    }
+
+    .review-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .review-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    .review-name {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .review-date {
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+
+    /* ===== ФОРМА ЗАПИСИ ===== */
+    .booking-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .booking-info h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .booking-info p {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
+
+    .booking-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-tertiary);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 16px 20px;
+      border-radius: 4px;
+      background: var(--bg-light);
+      border: 2px solid var(--border);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-glow);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* ===== CTA ===== */
+    .cta-block {
+      background: linear-gradient(135deg, #1a1410 0%, #0d0a07 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 64px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .cta-block::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(201,168,76,0.12), transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-block > * { position: relative; z-index: 1; }
+
+    .cta-block h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 44px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .cta-block p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      margin-bottom: 32px;
+    }
+
+    /* ===== ФУТЕР ===== */
+    .footer {
+      padding: 48px 0 32px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    .footer-copy {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      letter-spacing: 1px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      font-size: 16px;
+    }
+
+    .footer-social a:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    /* ===== ТОСТ ===== */
+    .toast-container {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      padding: 16px 24px;
+      border-radius: 4px;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: var(--shadow-md);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .toast.removing { animation: toastOut 0.25s ease forwards; }
+    .toast i { color: var(--accent); }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(60px) scale(0.9); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    @keyframes toastOut {
+      to { opacity: 0; transform: translateX(60px) scale(0.9); }
+    }
+
+    /* ===== АДАПТИВ ===== */
+    @media (max-width: 1100px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+      .hero h1 { font-size: 52px; }
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .masters-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .process-grid { grid-template-columns: repeat(2, 1fr); }
+      .booking-wrapper { grid-template-columns: 1fr; padding: 32px; }
+      .reviews-grid { grid-template-columns: repeat(2, 1fr); }
+      .section-title { font-size: 38px; }
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 0 16px; }
+      .header { width: calc(100% - 24px); padding: 10px 16px; border-radius: 50px; }
+      .nav-links { display: none; }
+      .hero { padding-top: 80px; min-height: auto; }
+      .hero h1 { font-size: 36px; }
+      .section { padding: 72px 0; }
+      .section-title { font-size: 28px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .masters-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-item.large { grid-column: span 1; grid-row: span 1; }
+      .process-grid { grid-template-columns: 1fr; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .cta-block { padding: 40px 20px; }
+      .cta-block h2 { font-size: 28px; }
+      .toast-container { left: 12px; right: 12px; bottom: 12px; }
+      .form-row { grid-template-columns: 1fr; }
+      .hero-image-badge { bottom: -8px; left: -8px; padding: 12px 14px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== ХЕДЕР ===== -->
+  <header class="header" id="header">
+    <a href="#" class="logo">
+      <div class="logo-mark"><i class="fas fa-cut"></i></div>
+      <span class="logo-text">Bl<span>a</span>de</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#services" class="nav-link">Услуги</a>
+      <a href="#masters" class="nav-link">Мастера</a>
+      <a href="#gallery" class="nav-link">Интерьер</a>
+      <a href="#booking" class="nav-link">Запись</a>
+      <a href="#reviews" class="nav-link">Отзывы</a>
+      <a href="#booking" class="nav-link nav-cta">Записаться</a>
+    </nav>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-text">
+          <div class="hero-badge">
+            <span class="dot"></span> Москва • с 2018
+          </div>
+          <h1>
+            Стиль —<br>
+            <span class="gold">это оружие</span>
+          </h1>
+          <p class="hero-desc">
+            BLADE — барбершоп для мужчин, которые знают цену качеству. Классические стрижки, опасное бритьё и атмосфера настоящего мужского клуба.
+          </p>
+          <div class="hero-btns">
+            <a href="#booking" class="btn btn-gold">
+              <i class="fas fa-calendar-check"></i> Записаться
+            </a>
+            <a href="#services" class="btn btn-outline">
+              <i class="fas fa-list-ul"></i> Услуги и цены
+            </a>
+          </div>
+        </div>
+        <div class="hero-image-wrap">
+          <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665594?w=600&h=800&fit=crop&auto=format" alt="Барбершоп BLADE" class="hero-image-main" loading="eager">
+          <div class="hero-image-badge">
+            <div class="icon"><i class="fas fa-star"></i></div>
+            <div class="text">
+              <strong>4.9 / 5</strong>
+              <span>600+ отзывов</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== УСЛУГИ ===== -->
+  <section class="section" id="services">
+    <div class="container">
+      <span class="section-label">Услуги и цены</span>
+      <h2 class="section-title">Мастерство<br>в каждой детали</h2>
+      <p class="section-subtitle">От классической стрижки до королевского бритья — каждая услуга выполняется с предельным вниманием.</p>
+
+      <div class="services-grid">
+        <div class="service-card" data-service="Мужская стрижка">
+          <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600&h=400&fit=crop&auto=format" alt="Мужская стрижка" class="service-card-image" loading="lazy">
+          <div class="service-card-body">
+            <h4>Мужская стрижка</h4>
+            <div class="duration"><i class="far fa-clock"></i> 45–60 мин</div>
+            <p>Классическая или современная стрижка с учётом формы лица и структуры волос.</p>
+            <div class="service-price">3 500 ₽</div>
+          </div>
+        </div>
+        <div class="service-card" data-service="Опасное бритьё">
+          <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&h=400&fit=crop&auto=format" alt="Опасное бритьё" class="service-card-image" loading="lazy">
+          <div class="service-card-body">
+            <h4>Опасное бритьё</h4>
+            <div class="duration"><i class="far fa-clock"></i> 30–40 мин</div>
+            <p>Классическое бритьё опасной бритвой с горячими компрессами и массажем.</p>
+            <div class="service-price">2 800 ₽</div>
+          </div>
+        </div>
+        <div class="service-card" data-service="Борода и усы">
+          <img src="https://images.unsplash.com/photo-1621607512214-68297480165e?w=600&h=400&fit=crop&auto=format" alt="Моделирование бороды" class="service-card-image" loading="lazy">
+          <div class="service-card-body">
+            <h4>Борода и усы</h4>
+            <div class="duration"><i class="far fa-clock"></i> 25–35 мин</div>
+            <p>Моделирование и уход за бородой и усами с использованием масел и бальзамов.</p>
+            <div class="service-price">2 200 ₽</div>
+          </div>
+        </div>
+        <div class="service-card" data-service="Комплекс">
+          <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&h=400&fit=crop&auto=format" alt="Комплекс BLADE" class="service-card-image" loading="lazy">
+          <div class="service-card-body">
+            <h4>Комплекс BLADE</h4>
+            <div class="duration"><i class="far fa-clock"></i> 75–90 мин</div>
+            <p>Стрижка + опасное бритьё + уход за бородой + виски. Идеальный выбор.</p>
+            <div class="service-price">6 500 ₽</div>
+          </div>
+        </div>
+        <div class="service-card" data-service="Укладка">
+          <img src="https://images.unsplash.com/photo-1560869713-da86a9ec0744?w=600&h=400&fit=crop&auto=format" alt="Укладка волос" class="service-card-image" loading="lazy">
+          <div class="service-card-body">
+            <h4>Укладка и стайлинг</h4>
+            <div class="duration"><i class="far fa-clock"></i> 20–30 мин</div>
+            <p>Профессиональная укладка с подбором средств под ваш тип волос.</p>
+            <div class="service-price">1 500 ₽</div>
+          </div>
+        </div>
+        <div class="service-card" data-service="Камуфляж">
+          <img src="https://images.unsplash.com/photo-1517832606299-7ae9b720a186?w=600&h=400&fit=crop&auto=format" alt="Камуфляж седины" class="service-card-image" loading="lazy">
+          <div class="service-card-body">
+            <h4>Камуфляж седины</h4>
+            <div class="duration"><i class="far fa-clock"></i> 20–30 мин</div>
+            <p>Деликатное тонирование для естественного образа без эффекта краски.</p>
+            <div class="service-price">2 000 ₽</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== МАСТЕРА ===== -->
+  <section class="section" id="masters" style="background:var(--bg-light);">
+    <div class="container">
+      <span class="section-label">Команда</span>
+      <h2 class="section-title">Мастера<br>своего дела</h2>
+      <p class="section-subtitle">Каждый барбер BLADE — это художник с многолетним опытом и страстью к своему ремеслу.</p>
+
+      <div class="masters-grid">
+        <div class="master-card">
+          <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665594?w=400&h=400&fit=crop&auto=format" alt="Артём" class="master-image" loading="lazy">
+          <div class="master-card-body">
+            <h4>Артём</h4>
+            <div class="role">Senior Barber</div>
+            <p>12 лет опыта. Специализация: классические стрижки и опасное бритьё.</p>
+          </div>
+        </div>
+        <div class="master-card">
+          <img src="https://images.unsplash.com/photo-1593702288056-7927b442d0fa?w=400&h=400&fit=crop&auto=format" alt="Даниил" class="master-image" loading="lazy">
+          <div class="master-card-body">
+            <h4>Даниил</h4>
+            <div class="role">Top Barber</div>
+            <p>8 лет опыта. Эксперт по современным стрижкам и камуфляжу седины.</p>
+          </div>
+        </div>
+        <div class="master-card">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&auto=format" alt="Максим" class="master-image" loading="lazy">
+          <div class="master-card-body">
+            <h4>Максим</h4>
+            <div class="role">Barber & Colorist</div>
+            <p>6 лет опыта. Мастер моделирования бороды и ухода за волосами.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ИНТЕРЬЕР ===== -->
+  <section class="section" id="gallery">
+    <div class="container">
+      <span class="section-label">Атмосфера</span>
+      <h2 class="section-title">Интерьер<br>с характером</h2>
+      <p class="section-subtitle">Кирпич, дерево, кожа и приглушённый свет — пространство, где хочется остаться.</p>
+
+      <div class="gallery-grid">
+        <div class="gallery-item large">
+          <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&h=800&fit=crop&auto=format" alt="Интерьер барбершопа" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&h=400&fit=crop&auto=format" alt="Рабочее место" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1517832606299-7ae9b720a186?w=400&h=400&fit=crop&auto=format" alt="Инструменты" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=400&h=400&fit=crop&auto=format" alt="Зона ожидания" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1560869713-da86a9ec0744?w=400&h=400&fit=crop&auto=format" alt="Детали интерьера" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ПРОЦЕСС ===== -->
+  <section class="section" style="background:var(--bg-light);">
+    <div class="container">
+      <span class="section-label">Процесс</span>
+      <h2 class="section-title">Как проходит<br>визит в BLADE</h2>
+      <p class="section-subtitle">Каждый визит — это ритуал. От порога до финального взгляда в зеркало.</p>
+
+      <div class="process-grid">
+        <div class="process-step">
+          <div class="step-num">01</div>
+          <h4>Welcome drink</h4>
+          <p>Виски или кофе на выбор, чтобы расслабиться перед стрижкой.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-num">02</div>
+          <h4>Консультация</h4>
+          <p>Обсуждаем ваш стиль, форму лица и желаемый результат.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-num">03</div>
+          <h4>Работа мастера</h4>
+          <p>Стрижка, бритьё или уход — с предельной точностью и вниманием.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-num">04</div>
+          <h4>Финальный штрих</h4>
+          <p>Стайлинг, советы по уходу и комплимент от заведения.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ЗАПИСЬ ===== -->
+  <section class="section" id="booking">
+    <div class="container">
+      <div class="booking-wrapper">
+        <div class="booking-info">
+          <span class="section-label">Запись</span>
+          <h3>Забронируйте<br>своё время</h3>
+          <p>Выберите мастера и услугу — мы подтвердим запись в течение 3 минут.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <span class="trust-badge" style="padding:8px 14px;background:var(--accent-soft);border-radius:4px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:600;">
+              <i class="fas fa-wifi"></i> Wi-Fi
+            </span>
+            <span class="trust-badge" style="padding:8px 14px;background:var(--accent-soft);border-radius:4px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:600;">
+              <i class="fas fa-wine-glass"></i> Бар
+            </span>
+            <span class="trust-badge" style="padding:8px 14px;background:var(--accent-soft);border-radius:4px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:600;">
+              <i class="fas fa-parking"></i> Парковка
+            </span>
+          </div>
+        </div>
+        <form class="booking-form" id="bookingForm">
+          <div class="form-group">
+            <label>Ваше имя</label>
+            <input type="text" class="form-input" placeholder="Александр" required>
+          </div>
+          <div class="form-group">
+            <label>Телефон</label>
+            <input type="tel" class="form-input" placeholder="+7 (999) 123-45-67" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Мастер</label>
+              <select class="form-select">
+                <option>Артём</option>
+                <option>Даниил</option>
+                <option>Максим</option>
+                <option>Любой мастер</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Услуга</label>
+              <select class="form-select">
+                <option>Мужская стрижка</option>
+                <option>Опасное бритьё</option>
+                <option>Борода и усы</option>
+                <option>Комплекс BLADE</option>
+                <option>Укладка</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;margin-top:8px;">
+            <i class="fas fa-calendar-check"></i> Записаться
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ОТЗЫВЫ ===== -->
+  <section class="section" id="reviews">
+    <div class="container">
+      <span class="section-label">Отзывы</span>
+      <h2 class="section-title">Слова<br>наших клиентов</h2>
+      <p class="section-subtitle">600+ мужчин доверяют BLADE свой стиль. Вот что они говорят.</p>
+
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Хожу к Артёму уже 3 года. Всегда идеальная стрижка и отличная атмосфера. Виски на входе — приятный бонус."</p>
+          <div class="review-author">
+            <div class="review-avatar">АК</div>
+            <div>
+              <div class="review-name">Алексей К.</div>
+              <div class="review-date">2 недели назад</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Лучший барбершоп в Москве. Бритьё опасной бритвой — это искусство. Выходишь другим человеком."</p>
+          <div class="review-author">
+            <div class="review-avatar">ДМ</div>
+            <div>
+              <div class="review-name">Дмитрий М.</div>
+              <div class="review-date">1 месяц назад</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Интерьер — огонь. Мастера — профи. Цены адекватные для такого уровня. Теперь только сюда."</p>
+          <div class="review-author">
+            <div class="review-avatar">РС</div>
+            <div>
+              <div class="review-name">Роман С.</div>
+              <div class="review-date">3 недели назад</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-block">
+        <h2>Готовы к новому стилю?</h2>
+        <p>Запишитесь прямо сейчас — и получите welcome drink в подарок при первом визите.</p>
+        <a href="#booking" class="btn btn-gold">
+          <i class="fas fa-cut"></i> Записаться в BLADE
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ФУТЕР ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-social">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-telegram"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+        <a href="#"><i class="fab fa-vk"></i></a>
+      </div>
+      <div class="footer-links">
+        <a href="#services">Услуги</a>
+        <a href="#masters">Мастера</a>
+        <a href="#gallery">Интерьер</a>
+        <a href="#booking">Запись</a>
+        <a href="#reviews">Отзывы</a>
+        <a href="#">+7 (900) 000-00-00</a>
+      </div>
+      <p class="footer-copy">© 2026 BLADE Barbershop. Стиль — это оружие. Все права защищены.</p>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    (() => {
+      const header = document.getElementById('header');
+      window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 50));
+
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const t = document.querySelector(this.getAttribute('href'));
+          if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      const showToast = (msg) => {
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.innerHTML = `<i class="fas fa-check-circle"></i> ${msg}`;
+        document.getElementById('toastContainer').appendChild(el);
+        setTimeout(() => { el.classList.add('removing'); el.addEventListener('animationend', () => el.remove()); }, 3000);
+      };
+
+      document.querySelectorAll('.service-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const name = card.dataset.service;
+          document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+          showToast(`Выбрана услуга: ${name}`);
+        });
+      });
+
+      document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = this.querySelector('input[type="text"]').value || 'Гость';
+        showToast(`✅ ${name}, заявка принята! Подтвердим в течение 3 минут.`);
+        this.reset();
+      });
+
+      console.log('%c🗡️ BLADE %cBarbershop %c— Стиль это оружие',
+        'font-size:18px;font-weight:700;color:#c9a84c;',
+        'font-size:11px;color:#e8e0d5;',
+        'font-size:10px;color:#9a9085;');
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMBER — Ресторан авторской кухни | Москва</title>
+  <meta name="description" content="EMBER — ресторан авторской кухни в центре Москвы. Огонь, вкус, атмосфера. Забронируйте столик онлайн.">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 62,35 95,35 68,55 78,88 50,68 22,88 32,55 5,35 38,35' fill='%23e85d2c' opacity='0.9'/></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 62,35 95,35 68,55 78,88 50,68 22,88 32,55 5,35 38,35' fill='%23e85d2c' opacity='0.9'/></svg>">
+  <meta name="theme-color" content="#0a0a0a">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg: #080808;
+      --bg-light: #111111;
+      --surface: #0d0d0d;
+      --surface-2: #141414;
+      --border: rgba(255,255,255,0.05);
+      --border-strong: rgba(255,255,255,0.1);
+      --text: #f0e8e0;
+      --text-secondary: #a09890;
+      --text-tertiary: #6b635c;
+      --accent: #e85d2c;
+      --accent-glow: rgba(232,93,44,0.25);
+      --accent-soft: rgba(232,93,44,0.08);
+      --copper: #c1784a;
+      --copper-light: #d4914a;
+      --amber: #e8a84c;
+      --charcoal: #1c1c1c;
+      --radius-xs: 4px;
+      --radius-sm: 10px;
+      --radius: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+      --shadow-sm: 0 4px 20px rgba(0,0,0,0.4);
+      --shadow-md: 0 12px 40px rgba(0,0,0,0.6);
+      --shadow-lg: 0 24px 64px rgba(0,0,0,0.8);
+      --shadow-glow: 0 8px 40px rgba(232,93,44,0.2);
+      --transition: 0.35s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+      --transition-slow: 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Атмосферный фон */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 25% 15%, rgba(232,93,44,0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 75% 80%, rgba(193,120,74,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(232,168,76,0.02) 0%, transparent 70%);
+      animation: ambientFire 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientFire {
+      0% { opacity: 0.6; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.03); }
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== ХЕДЕР ===== */
+    .header {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 96px);
+      max-width: 1192px;
+      z-index: 100;
+      background: rgba(13,13,13,0.7);
+      backdrop-filter: blur(30px) saturate(140%);
+      -webkit-backdrop-filter: blur(30px) saturate(140%);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.35s ease;
+    }
+
+    .header.scrolled {
+      background: rgba(13,13,13,0.9);
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent), var(--copper));
+      clip-path: polygon(50% 0%, 65% 35%, 100% 35%, 73% 60%, 85% 95%, 50% 72%, 15% 95%, 27% 60%, 0% 35%, 35% 35%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #fff;
+      box-shadow: 0 6px 24px var(--accent-glow);
+      transition: var(--transition-slow);
+      animation: flicker 3s ease-in-out infinite;
+    }
+
+    @keyframes flicker {
+      0%, 100% { box-shadow: 0 6px 24px var(--accent-glow); }
+      50% { box-shadow: 0 8px 36px rgba(232,93,44,0.4); }
+    }
+
+    .logo:hover .logo-mark {
+      transform: scale(1.1) rotate(10deg);
+      box-shadow: 0 10px 36px rgba(232,93,44,0.5);
+    }
+
+    .logo-text {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    .logo-text span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .nav-link {
+      padding: 9px 18px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: var(--transition);
+      cursor: pointer;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .nav-link:hover {
+      color: var(--text);
+      background: var(--accent-soft);
+    }
+
+    .nav-cta {
+      background: var(--accent);
+      color: white !important;
+      font-weight: 600;
+      padding: 10px 22px;
+      margin-left: 6px;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .nav-cta:hover {
+      background: #d44d1c;
+      box-shadow: 0 8px 28px rgba(232,93,44,0.4);
+      transform: translateY(-2px);
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding-top: 80px;
+    }
+
+    .hero-bg-image {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.55;
+      pointer-events: none;
+      animation: heroSlowPan 12s ease-in-out infinite alternate;
+      mask-image: linear-gradient(to left, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+    }
+
+    @keyframes heroSlowPan {
+      0% { transform: scale(1.08) translateY(0); }
+      100% { transform: scale(1) translateY(-15px); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 560px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      border-radius: 4px;
+      background: var(--accent-soft);
+      border-left: 3px solid var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--copper-light);
+      margin-bottom: 32px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-badge .dot {
+      width: 5px;
+      height: 5px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: emberPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes emberPulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.8); box-shadow: 0 0 8px var(--accent); }
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 80px;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -1px;
+      margin-bottom: 24px;
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+
+    .hero h1 .fire {
+      color: var(--accent);
+      font-style: italic;
+      position: relative;
+    }
+
+    .hero h1 .fire::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.5;
+    }
+
+    .hero-desc {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      line-height: 1.8;
+      font-weight: 300;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s ease 0.3s both;
+    }
+
+    .btn {
+      padding: 17px 36px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-slow);
+      border: none;
+      font-family: 'Inter', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .btn-fire {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 8px 28px var(--accent-glow);
+    }
+
+    .btn-fire:hover {
+      background: #d44d1c;
+      box-shadow: 0 14px 40px rgba(232,93,44,0.45);
+      transform: translateY(-3px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--border-strong);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      transform: translateY(-2px);
+    }
+
+    .hero-spark {
+      position: absolute;
+      bottom: 100px;
+      right: 10%;
+      z-index: 2;
+      animation: sparkFloat 5s ease-in-out infinite, fadeUp 0.8s ease 0.4s both;
+    }
+
+    @keyframes sparkFloat {
+      0%, 100% { transform: translateY(0); opacity: 0.6; }
+      50% { transform: translateY(-18px); opacity: 1; }
+    }
+
+    .hero-spark i {
+      font-size: 40px;
+      color: var(--accent);
+      filter: drop-shadow(0 0 20px var(--accent-glow));
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(36px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== СЕКЦИИ ===== */
+    .section {
+      padding: 120px 0;
+      position: relative;
+    }
+
+    .section-dark {
+      background: var(--bg-light);
+    }
+
+    .section-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: var(--copper-light);
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: inline-block;
+      padding: 6px 16px;
+      background: var(--accent-soft);
+      border-radius: 2px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px;
+      font-weight: 400;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+
+    .section-subtitle {
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin-bottom: 56px;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ===== МЕНЮ ===== */
+    .menu-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .menu-tab {
+      padding: 12px 24px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      background: transparent;
+      border: 2px solid var(--border);
+      color: var(--text-secondary);
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .menu-tab:hover {
+      border-color: var(--copper);
+      color: var(--text);
+    }
+
+    .menu-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      display: none;
+    }
+
+    .menu-grid.active {
+      display: grid;
+    }
+
+    .menu-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      gap: 20px;
+      transition: var(--transition-slow);
+      cursor: pointer;
+    }
+
+    .menu-item:hover {
+      border-color: var(--copper);
+      box-shadow: var(--shadow-glow);
+      transform: translateY(-4px);
+    }
+
+    .menu-item-image {
+      width: 100px;
+      height: 100px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .menu-item-info h5 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .menu-item-info .desc {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .menu-item-info .price {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--copper-light);
+    }
+
+    .menu-item-info .weight {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-left: 6px;
+    }
+
+    /* ===== ШЕФ ===== */
+    .chef-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .chef-image-wrap {
+      position: relative;
+    }
+
+    .chef-image {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .chef-quote {
+      position: absolute;
+      bottom: -24px;
+      right: -24px;
+      background: var(--surface);
+      border: 1px solid var(--copper);
+      padding: 20px 24px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-md);
+      max-width: 260px;
+    }
+
+    .chef-quote p {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 18px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .chef-quote span {
+      font-size: 10px;
+      color: var(--copper-light);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .chef-info h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 400;
+      margin-bottom: 12px;
+    }
+
+    .chef-info .role {
+      font-size: 11px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .chef-info p {
+      color: var(--text-secondary);
+      font-weight: 300;
+      margin-bottom: 20px;
+      line-height: 1.7;
+    }
+
+    /* ===== ГАЛЕРЕЯ ИНТЕРЬЕРА ===== */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .gallery-item {
+      aspect-ratio: 1;
+      overflow: hidden;
+      border-radius: var(--radius-xs);
+      cursor: pointer;
+      transition: var(--transition-slow);
+      border: 2px solid transparent;
+      position: relative;
+    }
+
+    .gallery-item:hover {
+      border-color: var(--copper);
+      transform: scale(1.04);
+      z-index: 2;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition-slow);
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.12);
+    }
+
+    .gallery-item.wide {
+      grid-column: span 2;
+      aspect-ratio: 2/1;
+    }
+
+    /* ===== БРОНИРОВАНИЕ ===== */
+    .booking-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 52px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 52px;
+      align-items: center;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .booking-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -30%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(232,93,44,0.08), transparent 70%);
+      pointer-events: none;
+    }
+
+    .booking-info h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 40px;
+      font-weight: 400;
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+
+    .booking-info p {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      font-size: 15px;
+      font-weight: 300;
+    }
+
+    .booking-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-tertiary);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 15px 18px;
+      border-radius: 4px;
+      background: var(--bg-light);
+      border: 2px solid var(--border);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+
+    .form-select option {
+      background: var(--bg-light);
+      color: var(--text);
+    }
+
+    /* ===== ОТЗЫВЫ ===== */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .review-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: var(--transition-slow);
+    }
+
+    .review-card:hover {
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-3px);
+    }
+
+    .review-stars {
+      color: var(--amber);
+      margin-bottom: 14px;
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+
+    .review-text {
+      font-size: 14px;
+      margin-bottom: 18px;
+      line-height: 1.7;
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .review-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .review-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    .review-name {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .review-date {
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+
+    /* ===== CTA ===== */
+    .cta-block {
+      background: linear-gradient(135deg, #1a0e08 0%, #0d0604 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 64px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .cta-block::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(232,93,44,0.15), transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-block > * { position: relative; z-index: 1; }
+
+    .cta-block h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 400;
+      margin-bottom: 12px;
+    }
+
+    .cta-block p {
+      color: var(--text-secondary);
+      font-size: 17px;
+      margin-bottom: 32px;
+    }
+
+    /* ===== ФУТЕР ===== */
+    .footer {
+      padding: 48px 0 28px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: var(--transition-slow);
+      font-size: 15px;
+    }
+
+    .footer-social a:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-soft);
+      transform: translateY(-3px);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    .footer-copy {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      letter-spacing: 1px;
+    }
+
+    /* ===== ТОСТ ===== */
+    .toast-container {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      padding: 15px 24px;
+      border-radius: 4px;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: var(--shadow-md);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .toast.removing { animation: toastOut 0.25s ease forwards; }
+    .toast i { color: var(--accent); }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(60px) scale(0.9); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    @keyframes toastOut {
+      to { opacity: 0; transform: translateX(60px) scale(0.9); }
+    }
+
+    /* ===== АДАПТИВ ===== */
+    @media (max-width: 1100px) {
+      .hero-bg-image { width: 35%; }
+      .hero h1 { font-size: 52px; }
+      .menu-grid { grid-template-columns: 1fr; }
+      .chef-grid { grid-template-columns: 1fr; gap: 40px; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .booking-wrapper { grid-template-columns: 1fr; padding: 36px; }
+      .reviews-grid { grid-template-columns: repeat(2, 1fr); }
+      .section-title { font-size: 38px; }
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 0 18px; }
+      .header { width: calc(100% - 28px); padding: 10px 16px; border-radius: 50px; }
+      .nav-links { display: none; }
+      .hero { padding-top: 80px; min-height: auto; padding-bottom: 60px; }
+      .hero-bg-image { display: none; }
+      .hero h1 { font-size: 38px; }
+      .hero-content { max-width: 100%; }
+      .hero-spark { display: none; }
+      .section { padding: 72px 0; }
+      .section-title { font-size: 30px; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item.wide { grid-column: span 1; aspect-ratio: 1; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .cta-block { padding: 40px 20px; }
+      .cta-block h2 { font-size: 28px; }
+      .toast-container { left: 14px; right: 14px; bottom: 14px; }
+      .form-row { grid-template-columns: 1fr; }
+      .menu-item { flex-direction: column; }
+      .menu-item-image { width: 100%; height: 160px; }
+      .chef-quote { bottom: -10px; right: -10px; max-width: 200px; padding: 14px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== ХЕДЕР ===== -->
+  <header class="header" id="header">
+    <a href="#" class="logo">
+      <div class="logo-mark"></div>
+      <span class="logo-text">EMB<span>E</span>R</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#menu" class="nav-link">Меню</a>
+      <a href="#chef" class="nav-link">Шеф</a>
+      <a href="#gallery" class="nav-link">Интерьер</a>
+      <a href="#booking" class="nav-link">Бронь</a>
+      <a href="#reviews" class="nav-link">Отзывы</a>
+      <a href="#booking" class="nav-link nav-cta">Забронировать</a>
+    </nav>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&h=1200&fit=crop&auto=format" alt="Ресторан EMBER" class="hero-bg-image" loading="eager">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="dot"></span> Авторская кухня • Москва
+        </div>
+        <h1>
+          Вкус, рождённый<br>
+          <span class="fire">огнём</span>
+        </h1>
+        <p class="hero-desc">
+          EMBER — это гастрономический театр, где каждое блюдо готовится на открытом огне. Сезонное меню, премиальные продукты и атмосфера, которую хочется смаковать.
+        </p>
+        <div class="hero-btns">
+          <a href="#booking" class="btn btn-fire">
+            <i class="fas fa-fire"></i> Забронировать столик
+          </a>
+          <a href="#menu" class="btn btn-outline">
+            <i class="fas fa-utensils"></i> Смотреть меню
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-spark">
+      <i class="fas fa-fire"></i>
+    </div>
+  </section>
+
+  <!-- ===== МЕНЮ ===== -->
+  <section class="section section-dark" id="menu">
+    <div class="container">
+      <span class="section-label">Меню</span>
+      <h2 class="section-title">Блюда с характером</h2>
+      <p class="section-subtitle">Каждое блюдо — результат работы с огнём, сезонными продуктами и гастрономической интуицией шефа.</p>
+
+      <div class="menu-tabs" id="menuTabs">
+        <button class="menu-tab active" data-category="starters">Закуски</button>
+        <button class="menu-tab" data-category="hot">Горячее</button>
+        <button class="menu-tab" data-category="grill">Гриль</button>
+        <button class="menu-tab" data-category="desserts">Десерты</button>
+        <button class="menu-tab" data-category="bar">Барная карта</button>
+      </div>
+
+      <!-- Закуски -->
+      <div class="menu-grid active" data-category="starters" id="menuStarters">
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=200&fit=crop&auto=format" alt="Тартар" class="menu-item-image" loading="lazy">
+          <div class="menu-item-info"><h5>Тартар из тунца</h5><p class="desc">Свежий тунец с авокадо, соусом понзу и кунжутным маслом</p><span class="price">1 800 ₽</span><span class="weight">120 г</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1604909052743-94e838986d24?w=200&h=200&fit=crop&auto=format" alt="Буррата" class="menu-item-image" loading="lazy">
+          <div class="menu-item-info"><h5>Буррата с печёными томатами</h5><p class="desc">Сливочная буррата, томаты конфи, базилик, бальзамик</p><span class="price">1 400 ₽</span><span class="weight">150 г</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1626200419199-391ae4be7a41?w=200&h=200&fit=crop&auto=format" alt="Карпаччо" class="menu-item-image" loading="lazy">
+          <div class="menu-item-info"><h5>Карпаччо из говядины</h5><p class="desc">Тонкие слайсы мраморной говядины с рукколой и пармезаном</p><span class="price">2 200 ₽</span><span class="weight">100 г</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1551248429-40975aa4de74?w=200&h=200&fit=crop&auto=format" alt="Креветки" class="menu-item-image" loading="lazy">
+          <div class="menu-item-info"><h5>Креветки на гриле</h5><p class="desc">Аргентинские креветки с чесноком, чили и лаймом</p><span class="price">1 950 ₽</span><span class="weight">200 г</span></div>
+        </div>
+      </div>
+
+      <!-- Горячее -->
+      <div class="menu-grid" data-category="hot" id="menuHot">
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=200&h=200&fit=crop&auto=format" alt="Стейк" class="menu-item-image" loading="lazy">
+          <div class="menu-item-info"><h5>Стейк Рибай</h5><p class="desc">Мраморная говядина Prime, прожарка на выбор, соус из трюфеля</p><span class="price">5 800 ₽</span><span class="weight">300 г</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=200&h=200&fit=crop&auto=format" alt="Лосось" class="menu-item-image" loading="lazy">
+          <div class="menu-item-info"><h5>Лосось на кедровой доске</h5><p class="desc">Дикий лосось с лимонным ризотто и спаржей</p><span class="price">3 200 ₽</span><span class="weight">250 г</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=200&h=200&fit=crop&auto=format" alt="Паста" class="menu-item-image" loading="lazy">
+          <div class="menu-item-info"><h5>Паста с морепродуктами</h5><p class="desc">Домашняя паста с мидиями, кальмарами и креветками в сливочном соусе</p><span class="price">2 600 ₽</span><span class="weight">350 г</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1432139509613-5c4255a1d1a2?w=200&h=200&fit=crop&auto=format" alt="Утка" class="menu-item-image" loading="lazy">
+          <div class="menu-item-info"><h5>Утиная грудка</h5><p class="desc">Утиная грудка с вишнёвым демигласом и бататом</p><span class="price">3 800 ₽</span><span class="weight">280 г</span></div>
+        </div>
+      </div>
+
+      <!-- Гриль -->
+      <div class="menu-grid" data-category="grill" id="menuGrill">
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1558030006-450675393462?w=200&h=200&fit=crop&auto=format" alt="Томагавк" class="menu-item-image" loading="lazy">
+          <div class="menu-item-info"><h5>Томагавк на кости</h5><p class="desc">Гигантский стейк на кости, выдержанный 45 дней, на две персоны</p><span class="price">12 500 ₽</span><span class="weight">800 г</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=200&h=200&fit=crop&auto=format" alt="Ребра" class="menu-item-image" loading="lazy">
+          <div class="menu-item-info"><h5>Свиные ребра BBQ</h5><p class="desc">Медленно томлёные ребра в фирменном соусе EMBER</p><span class="price">3 400 ₽</span><span class="weight">450 г</span></div>
+        </div>
+      </div>
+
+      <!-- Десерты -->
+      <div class="menu-grid" data-category="desserts" id="menuDesserts">
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=200&h=200&fit=crop&auto=format" alt="Шоколад" class="menu-item-image" loading="lazy">
+          <div class="menu-item-info"><h5>Шоколадный фондан</h5><p class="desc">Горячий фондан с жидкой сердцевиной и ванильным мороженым</p><span class="price">1 100 ₽</span><span class="weight">150 г</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&h=200&fit=crop&auto=format" alt="Чизкейк" class="menu-item-image" loading="lazy">
+          <div class="menu-item-info"><h5>Чизкейк с маракуйей</h5><p class="desc">Нежный чизкейк с маракуйей и хрустящей основой</p><span class="price">1 300 ₽</span><span class="weight">180 г</span></div>
+        </div>
+      </div>
+
+      <!-- Бар -->
+      <div class="menu-grid" data-category="bar" id="menuBar">
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=200&h=200&fit=crop&auto=format" alt="Коктейль" class="menu-item-image" loading="lazy">
+          <div class="menu-item-info"><h5>Ember Old Fashioned</h5><p class="desc">Бурбон, ангостура, копчёный апельсин, тростниковый сахар</p><span class="price">1 400 ₽</span><span class="weight">180 мл</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=200&h=200&fit=crop&auto=format" alt="Вино" class="menu-item-image" loading="lazy">
+          <div class="menu-item-info"><h5>Вино Château Margaux</h5><p class="desc">Франция, Бордо, 2018 год. Подаётся в декантере.</p><span class="price">28 000 ₽</span><span class="weight">750 мл</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ШЕФ ===== -->
+  <section class="section" id="chef">
+    <div class="container">
+      <div class="chef-grid">
+        <div class="chef-image-wrap">
+          <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=600&h=750&fit=crop&auto=format" alt="Шеф-повар EMBER" class="chef-image" loading="lazy">
+          <div class="chef-quote">
+            <p>«Огонь — мой главный инструмент. Он делает еду честной.»</p>
+            <span>Алексей Ветров, шеф-повар</span>
+          </div>
+        </div>
+        <div class="chef-info">
+          <span class="section-label">Шеф-повар</span>
+          <h3>Алексей Ветров</h3>
+          <div class="role">Brand Chef • 18 лет опыта</div>
+          <p>Стажировался в ресторанах Noma, Osteria Francescana и Eleven Madison Park. Вернулся в Москву, чтобы создать EMBER — ресторан, где огонь становится главным ингредиентом каждого блюда.</p>
+          <p>Лауреат премии WhereToEat 2024. Член Международной гильдии шеф-поваров.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ИНТЕРЬЕР ===== -->
+  <section class="section section-dark" id="gallery">
+    <div class="container">
+      <span class="section-label">Атмосфера</span>
+      <h2 class="section-title">Интерьер с душой огня</h2>
+      <p class="section-subtitle">Кирпич, тёмное дерево, приглушённый свет и открытая кухня — пространство, где рождается магия.</p>
+
+      <div class="gallery-grid">
+        <div class="gallery-item wide">
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop&auto=format" alt="Зал ресторана" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=400&h=400&fit=crop&auto=format" alt="Барная стойка" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb51f3a?w=400&h=400&fit=crop&auto=format" alt="Открытая кухня" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=400&h=400&fit=crop&auto=format" alt="Столик" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&h=400&fit=crop&auto=format" alt="Детали" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== БРОНИРОВАНИЕ ===== -->
+  <section class="section" id="booking">
+    <div class="container">
+      <div class="booking-wrapper">
+        <div class="booking-info">
+          <span class="section-label">Бронирование</span>
+          <h3>Забронируйте<br>свой вечер</h3>
+          <p>Выберите дату, время и зону — мы подтвердим бронь в течение 2 минут. Столики у открытой кухни бронируются за 3 дня.</p>
+        </div>
+        <form class="booking-form" id="bookingForm">
+          <div class="form-group">
+            <label>Ваше имя</label>
+            <input type="text" class="form-input" placeholder="Александр" required>
+          </div>
+          <div class="form-group">
+            <label>Телефон</label>
+            <input type="tel" class="form-input" placeholder="+7 (900) 000-00-00" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Дата</label>
+              <input type="date" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label>Время</label>
+              <select class="form-select">
+                <option>18:00</option><option>18:30</option><option>19:00</option><option>19:30</option>
+                <option>20:00</option><option>20:30</option><option>21:00</option><option>21:30</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Гостей</label>
+              <select class="form-select">
+                <option>1 гость</option><option>2 гостя</option><option>3 гостя</option><option>4 гостя</option>
+                <option>5 гостей</option><option>6+ гостей</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Зона</label>
+              <select class="form-select">
+                <option>Основной зал</option><option>У открытой кухни</option><option>Барная зона</option><option>VIP-кабинет</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-fire" style="width:100%;justify-content:center;margin-top:6px;">
+            <i class="fas fa-fire"></i> Забронировать
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ОТЗЫВЫ ===== -->
+  <section class="section section-dark" id="reviews">
+    <div class="container">
+      <span class="section-label">Отзывы</span>
+      <h2 class="section-title">Гости говорят</h2>
+      <p class="section-subtitle">Более 2000 гостей оценили атмосферу и вкус EMBER. Вот некоторые впечатления.</p>
+
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Лучший стейк в моей жизни. Томагавк на двоих — это must try. Обслуживание на уровне Michelin."</p>
+          <div class="review-author">
+            <div class="review-avatar">АК</div>
+            <div><div class="review-name">Алексей К.</div><div class="review-date">2 недели назад</div></div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Отмечали годовщину — всё было идеально. Открытая кухня добавляет театральности ужину."</p>
+          <div class="review-author">
+            <div class="review-avatar">МС</div>
+            <div><div class="review-name">Мария С.</div><div class="review-date">1 месяц назад</div></div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Коктейли — искусство. Ember Old Fashioned — лучший в городе. Вернёмся обязательно."</p>
+          <div class="review-author">
+            <div class="review-avatar">ДМ</div>
+            <div><div class="review-name">Дмитрий М.</div><div class="review-date">3 недели назад</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-block">
+        <h2>Готовы к гастрономическому опыту?</h2>
+        <p>Забронируйте столик сейчас — и получите комплимент от шефа при первом визите.</p>
+        <a href="#booking" class="btn btn-fire">
+          <i class="fas fa-fire"></i> Забронировать столик
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ФУТЕР ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-social">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-telegram"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+        <a href="#"><i class="fab fa-vk"></i></a>
+      </div>
+      <div class="footer-links">
+        <a href="#menu">Меню</a>
+        <a href="#chef">Шеф</a>
+        <a href="#gallery">Интерьер</a>
+        <a href="#booking">Бронь</a>
+        <a href="#reviews">Отзывы</a>
+        <a href="#">+7 (900) 000-00-00</a>
+      </div>
+      <p class="footer-copy">© 2026 EMBER Restaurant. Вкус, рождённый огнём. Все права защищены.</p>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    (() => {
+      const header = document.getElementById('header');
+      window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 50));
+
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const t = document.querySelector(this.getAttribute('href'));
+          if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      // Табы меню
+      const tabs = document.querySelectorAll('.menu-tab');
+      const grids = document.querySelectorAll('.menu-grid');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const category = tab.dataset.category;
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          grids.forEach(g => g.classList.remove('active'));
+          const activeGrid = document.querySelector(`.menu-grid[data-category="${category}"]`);
+          if (activeGrid) activeGrid.classList.add('active');
+        });
+      });
+
+      const showToast = (msg) => {
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.innerHTML = `<i class="fas fa-fire"></i> ${msg}`;
+        document.getElementById('toastContainer').appendChild(el);
+        setTimeout(() => { el.classList.add('removing'); el.addEventListener('animationend', () => el.remove()); }, 3200);
+      };
+
+      // Клик по блюду
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const name = item.querySelector('h5').textContent;
+          showToast(`Выбрано: ${name}`);
+        });
+      });
+
+      // Форма бронирования
+      document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = this.querySelector('input[type="text"]').value || 'Гость';
+        showToast(`✅ ${name}, столик забронирован! Подтверждение придёт в SMS.`);
+        this.reset();
+      });
+
+      console.log('%c🔥 EMBER %cRestaurant %c— Вкус, рождённый огнём',
+        'font-size:20px;font-weight:700;color:#e85d2c;',
+        'font-size:12px;color:#f0e8e0;',
+        'font-size:10px;color:#a09890;');
+    })();
+  </script>
+</body>
+</html>
