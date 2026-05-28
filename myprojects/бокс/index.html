@@ -120,6 +120,7 @@
             color: var(--text);
             text-decoration: none;
             text-transform: uppercase;
+            z-index: 101;
         }
         .logo span {
             color: var(--accent);
@@ -602,30 +603,390 @@
             color: var(--accent);
         }
 
+        /* ==================== АДАПТИВ ==================== */
+
+        /* Планшеты */
+        @media (max-width: 1024px) {
+            .trainers-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .info-grid {
+                gap: 3rem;
+            }
+            .info-number {
+                font-size: 5rem;
+            }
+            .info-title {
+                font-size: 2.2rem;
+            }
+        }
+
+        /* Большие телефоны (iPhone 14 Pro Max, Samsung S23 Ultra и т.д.) */
         @media (max-width: 768px) {
-            section, .info-section, .cta-section {
+            #cursor {
+                display: none;
+            }
+            body {
+                cursor: auto;
+            }
+            .menu-btn {
+                cursor: pointer;
+            }
+
+            .header {
+                padding: 1.2rem 1.5rem;
+            }
+            .logo {
+                font-size: 1rem;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+                min-height: auto;
+            }
+            #hero {
+                padding: 0 1.5rem;
+                min-height: 100vh;
+            }
+            .info-section {
                 padding: 4rem 1.5rem;
             }
-            .header {
-                padding: 1.5rem;
+            .cta-section {
+                padding: 5rem 1.5rem;
             }
+
+            .hero-bg-text {
+                font-size: 35vw;
+                top: 40%;
+            }
+            .hero-number {
+                font-size: 1rem;
+                letter-spacing: 3px;
+                margin-bottom: 1.5rem;
+            }
+            .hero-title {
+                font-size: 3.5rem;
+                letter-spacing: -2px;
+            }
+            .hero-desc {
+                font-size: 0.95rem;
+                max-width: 100%;
+            }
+
             .info-grid {
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
-            .trainers-grid,
+            .info-number {
+                font-size: 4rem;
+            }
+            .info-title {
+                font-size: 2rem;
+            }
+            .info-text {
+                font-size: 0.95rem;
+            }
+            .info-image {
+                order: -1;
+                aspect-ratio: 16/9;
+            }
+
+            .trainers-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+            .trainer-card {
+                aspect-ratio: 3/4;
+            }
+            .trainer-name {
+                font-size: 1.1rem;
+            }
+            .trainer-info {
+                padding: 1.5rem;
+            }
+
             .pricing-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
+                max-width: 400px;
+                margin: 0 auto;
             }
+            .price-card {
+                padding: 2rem 1.5rem;
+            }
+            .price-value {
+                font-size: 2.5rem;
+            }
+
+            .modal {
+                padding: 2rem 1.5rem;
+            }
+            .modal-title {
+                font-size: 1.5rem;
+            }
+
+            footer {
+                padding: 2rem 1.5rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .menu-overlay nav a {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Средние телефоны (iPhone 12/13/14, Samsung S22 и т.д.) */
+        @media (max-width: 480px) {
+            .header {
+                padding: 1rem 1.2rem;
+            }
+            .logo {
+                font-size: 0.9rem;
+                letter-spacing: 1px;
+            }
+            .menu-btn span {
+                width: 24px;
+                height: 2px;
+            }
+
+            section {
+                padding: 3.5rem 1rem;
+            }
+            #hero {
+                padding: 0 1rem;
+            }
+            .info-section {
+                padding: 3.5rem 1rem;
+            }
+            .cta-section {
+                padding: 4rem 1rem;
+            }
+
             .hero-bg-text {
                 font-size: 30vw;
             }
-            footer {
-                flex-direction: column;
-                text-align: center;
+            .hero-number {
+                font-size: 0.85rem;
+                letter-spacing: 2px;
+                margin-bottom: 1rem;
             }
+            .hero-title {
+                font-size: 2.8rem;
+                letter-spacing: -1px;
+            }
+            .hero-desc {
+                font-size: 0.85rem;
+            }
+
+            .info-number {
+                font-size: 3rem;
+            }
+            .info-title {
+                font-size: 1.8rem;
+            }
+            .info-text {
+                font-size: 0.85rem;
+            }
+            .info-image {
+                aspect-ratio: 4/3;
+            }
+
+            .trainers-grid {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+                max-width: 350px;
+                margin: 0 auto;
+            }
+
+            .pricing-grid {
+                max-width: 350px;
+            }
+            .price-title {
+                font-size: 1.2rem;
+            }
+            .price-value {
+                font-size: 2.2rem;
+            }
+            .price-btn, .cta-btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.75rem;
+                letter-spacing: 2px;
+            }
+
+            .cta-title {
+                font-size: 1.8rem;
+            }
+
+            .menu-overlay nav a {
+                font-size: 2rem;
+            }
+            .menu-overlay .menu-number {
+                font-size: 0.7rem;
+            }
+
             .modal {
-                padding: 2rem 1.5rem;
+                padding: 1.5rem 1rem;
+            }
+            .form-group label {
+                font-size: 0.7rem;
+            }
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 0.9rem;
+                padding: 0.7rem 0.8rem;
+            }
+            .form-submit {
+                font-size: 0.8rem;
+                padding: 0.8rem;
+            }
+        }
+
+        /* Маленькие телефоны (iPhone SE, iPhone 5/6/7/8, Samsung A-серия) */
+        @media (max-width: 375px) {
+            .header {
+                padding: 0.9rem 1rem;
+            }
+            .logo {
+                font-size: 0.8rem;
+                letter-spacing: 1px;
+            }
+            .menu-btn span {
+                width: 20px;
+                height: 1.5px;
+            }
+
+            section {
+                padding: 3rem 0.8rem;
+            }
+            #hero {
+                padding: 0 0.8rem;
+            }
+            .info-section {
+                padding: 3rem 0.8rem;
+            }
+            .cta-section {
+                padding: 3.5rem 0.8rem;
+            }
+
+            .hero-bg-text {
+                font-size: 28vw;
+            }
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            .hero-desc {
+                font-size: 0.75rem;
+            }
+
+            .info-number {
+                font-size: 2.5rem;
+            }
+            .info-title {
+                font-size: 1.5rem;
+            }
+            .info-text {
+                font-size: 0.8rem;
+            }
+            .info-image {
+                aspect-ratio: 3/2;
+            }
+
+            .trainers-grid {
+                max-width: 300px;
+            }
+            .trainer-name {
+                font-size: 1rem;
+            }
+            .trainer-role {
+                font-size: 0.75rem;
+            }
+
+            .pricing-grid {
+                max-width: 300px;
+            }
+            .price-card {
+                padding: 1.5rem 1rem;
+            }
+            .price-title {
+                font-size: 1.1rem;
+            }
+            .price-value {
+                font-size: 1.8rem;
+                margin: 1rem 0;
+            }
+            .price-btn, .cta-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.7rem;
+                letter-spacing: 1px;
+            }
+
+            .cta-title {
+                font-size: 1.5rem;
+            }
+
+            .menu-overlay nav a {
+                font-size: 1.8rem;
+            }
+
+            .modal-title {
+                font-size: 1.3rem;
+            }
+            footer {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Очень маленькие телефоны (iPhone 4, старые Android) */
+        @media (max-width: 320px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            .hero-desc {
+                font-size: 0.7rem;
+            }
+
+            .info-number {
+                font-size: 2rem;
+            }
+            .info-title {
+                font-size: 1.3rem;
+            }
+            .info-text {
+                font-size: 0.75rem;
+            }
+
+            .trainers-grid {
+                max-width: 260px;
+            }
+            .trainer-name {
+                font-size: 0.9rem;
+            }
+            .trainer-role {
+                font-size: 0.7rem;
+            }
+            .trainer-info {
+                padding: 1rem;
+            }
+
+            .pricing-grid {
+                max-width: 260px;
+            }
+            .price-title {
+                font-size: 1rem;
+            }
+            .price-value {
+                font-size: 1.6rem;
+            }
+
+            .menu-overlay nav a {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -812,19 +1173,21 @@
 
     <script>
         (() => {
-            // Кастомный курсор
+            // Кастомный курсор (только десктоп)
             const cursor = document.getElementById('cursor');
-            document.addEventListener('mousemove', (e) => {
-                cursor.style.left = `${e.clientX}px`;
-                cursor.style.top = `${e.clientY}px`;
-            });
-            document.addEventListener('mousedown', () => cursor.classList.add('cursor-active'));
-            document.addEventListener('mouseup', () => cursor.classList.remove('cursor-active'));
-            const hoverTargets = document.querySelectorAll('a, button, .trainer-card, .price-card, .info-image, .menu-btn, input, select, textarea, .form-submit');
-            hoverTargets.forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
-            });
+            if (window.innerWidth > 768) {
+                document.addEventListener('mousemove', (e) => {
+                    cursor.style.left = `${e.clientX}px`;
+                    cursor.style.top = `${e.clientY}px`;
+                });
+                document.addEventListener('mousedown', () => cursor.classList.add('cursor-active'));
+                document.addEventListener('mouseup', () => cursor.classList.remove('cursor-active'));
+                const hoverTargets = document.querySelectorAll('a, button, .trainer-card, .price-card, .info-image, .menu-btn, input, select, textarea, .form-submit');
+                hoverTargets.forEach(el => {
+                    el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
+                    el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
+                });
+            }
 
             // Прелоадер
             const preloader = document.getElementById('preloader');
@@ -867,12 +1230,10 @@
             const signupForm = document.getElementById('signupForm');
             const planSelect = document.getElementById('plan');
 
-            // Открытие модального окна по всем кнопкам
             document.querySelectorAll('.modal-trigger').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const plan = btn.getAttribute('data-plan');
                     if (plan && planSelect) {
-                        // Ищем соответствующий option
                         const options = planSelect.options;
                         for (let i = 0; i < options.length; i++) {
                             if (options[i].value === plan || options[i].text.includes(plan)) {
@@ -886,7 +1247,6 @@
                 });
             });
 
-            // Закрытие модального окна
             function closeModal() {
                 modalOverlay.classList.remove('active');
                 document.body.style.overflow = '';
@@ -901,7 +1261,6 @@
                 }
             });
 
-            // Отправка формы
             signupForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const name = document.getElementById('name').value.trim();
@@ -914,7 +1273,6 @@
                     return;
                 }
 
-                // Имитация отправки
                 const submitBtn = signupForm.querySelector('.form-submit');
                 const originalText = submitBtn.textContent;
                 submitBtn.textContent = 'Отправка...';
