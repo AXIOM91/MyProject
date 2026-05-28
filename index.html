@@ -117,6 +117,7 @@
             color: var(--text);
             text-decoration: none;
             text-transform: uppercase;
+            z-index: 102;
         }
         .logo span {
             color: var(--accent);
@@ -136,6 +137,71 @@
             transition: color 0.3s ease;
         }
         .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: none;
+            padding: 8px;
+            z-index: 102;
+        }
+        .menu-btn span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--text);
+            transition: transform 0.35s ease, opacity 0.35s ease;
+        }
+        .menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(15, 15, 15, 0.98);
+            z-index: 101;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .mobile-menu nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            text-align: center;
+        }
+        .mobile-menu nav a {
+            font-family: var(--font-heading);
+            font-weight: 300;
+            font-size: 2rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            letter-spacing: -1px;
+        }
+        .mobile-menu nav a:hover {
             color: var(--accent);
         }
 
@@ -254,19 +320,6 @@
             height: 100%;
             object-fit: cover;
             display: block;
-        }
-        .about-photo-placeholder {
-            width: 100%;
-            height: 100%;
-            background: var(--surface-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .about-photo-placeholder svg {
-            width: 80px;
-            height: 80px;
-            opacity: 0.3;
         }
         .section-number {
             font-family: var(--font-heading);
@@ -462,31 +515,137 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
         @media (max-width: 768px) {
+            #cursor {
+                display: none;
+            }
+            body {
+                cursor: auto;
+            }
+
+            .header {
+                padding: 1.2rem 1.5rem;
+            }
             .nav-links {
                 display: none;
             }
+            .menu-btn {
+                display: flex;
+            }
+
             section {
-                padding: 4rem 1.5rem;
+                padding: 4rem 1.2rem;
+                min-height: auto;
             }
-            .header {
-                padding: 1.5rem;
+            #hero {
+                padding: 0 1.2rem;
+                min-height: 100vh;
             }
+
+            .hero-bg-text {
+                font-size: 30vw;
+                top: 40%;
+                right: -10%;
+            }
+            .hero-greeting {
+                font-size: 0.8rem;
+                letter-spacing: 3px;
+                margin-bottom: 1.2rem;
+            }
+            .hero-name {
+                font-size: 3.5rem;
+                letter-spacing: -2px;
+            }
+            .hero-name span {
+                font-size: 2.5rem;
+            }
+            .hero-role {
+                font-size: 0.95rem;
+                max-width: 100%;
+                margin-bottom: 2rem;
+            }
+            .hero-cta {
+                padding: 0.8rem 1.8rem;
+                font-size: 0.75rem;
+                letter-spacing: 2px;
+            }
+
             .about-grid {
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
+            .about-image {
+                max-width: 300px;
+                margin: 0 auto;
+            }
+            .section-number {
+                font-size: 3.5rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .section-text {
+                font-size: 0.9rem;
+            }
+            .skills-tags {
+                gap: 0.4rem;
+            }
+            .skill-tag {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.8rem;
+            }
+
             .projects-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
             }
+            .project-card:hover {
+                transform: none;
+            }
+            .project-arrow {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            .project-info {
+                padding: 1rem;
+            }
+            .project-title {
+                font-size: 0.95rem;
+            }
+            .project-desc {
+                font-size: 0.75rem;
+            }
+
             .contact-links {
-                gap: 2rem;
+                gap: 1.5rem;
             }
             .contact-link {
                 font-size: 1.2rem;
             }
-            .hero-bg-text {
-                font-size: 25vw;
+            .contact-link span {
+                font-size: 0.65rem;
+            }
+
+            footer {
+                padding: 1.5rem 1.2rem;
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-name {
+                font-size: 2.8rem;
+            }
+            .hero-name span {
+                font-size: 2rem;
+            }
+            .mobile-menu nav a {
+                font-size: 1.8rem;
+            }
+            .contact-links {
+                flex-direction: column;
+                gap: 1.2rem;
             }
         }
     </style>
@@ -505,7 +664,20 @@
             <a href="#projects">Проекты</a>
             <a href="#contact">Контакты</a>
         </nav>
+        <button class="menu-btn" id="menuBtn" aria-label="Меню">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <nav>
+            <a href="#about">О себе</a>
+            <a href="#projects">Проекты</a>
+            <a href="#contact">Контакты</a>
+        </nav>
+    </div>
 
     <section id="hero">
         <div class="hero-bg-text">PORTFOLIO</div>
@@ -535,7 +707,9 @@
                 </p>
                 <div class="skills-tags">
                     <span class="skill-tag">Веб-дизайн</span>
-                    <span class="skill-tag">HTML / CSS / JS / PYTHON / REACT</span>
+                    <span class="skill-tag">HTML / CSS / JS</span>
+                    <span class="skill-tag">PYTHON / REACT</span>
+                    <span class="skill-tag">Бокс</span>
                     <span class="skill-tag">UX/UI</span>
                     <span class="skill-tag">Figma</span>
                     <span class="skill-tag">Типографика</span>
@@ -550,7 +724,6 @@
             <h2 class="section-title">Избранные проекты</h2>
         </div>
         <div class="projects-grid">
-
             <a href="./myprojects/клининг/index.html" class="project-card" target="_blank">
                 <div class="project-image">
                     <div class="project-logo-placeholder">
@@ -567,7 +740,6 @@
                 </div>
                 <span class="project-arrow">↗</span>
             </a>
-
             <a href="./myprojects/барбершоп/index.html" class="project-card" target="_blank">
                 <div class="project-image">
                     <div class="project-logo-placeholder">
@@ -584,7 +756,6 @@
                 </div>
                 <span class="project-arrow">↗</span>
             </a>
-
             <a href="./myprojects/йога/index.html" class="project-card" target="_blank">
                 <div class="project-image">
                     <div class="project-logo-placeholder">
@@ -601,7 +772,6 @@
                 </div>
                 <span class="project-arrow">↗</span>
             </a>
-
             <a href="./myprojects/ресторан/index.html" class="project-card" target="_blank">
                 <div class="project-image">
                     <div class="project-logo-placeholder">
@@ -618,7 +788,6 @@
                 </div>
                 <span class="project-arrow">↗</span>
             </a>
-
             <a href="./myprojects/фитнес/index.html#cta" class="project-card" target="_blank">
                 <div class="project-image">
                     <div class="project-logo-placeholder">
@@ -635,7 +804,6 @@
                 </div>
                 <span class="project-arrow">↗</span>
             </a>
-
             <a href="./myprojects/конфигуратор/index.html" class="project-card" target="_blank">
                 <div class="project-image">
                     <div class="project-logo-placeholder">
@@ -652,8 +820,7 @@
                 </div>
                 <span class="project-arrow">↗</span>
             </a>
-
-            <a href="./myprojects/батуты/index.html#trainers" class="project-card" target="_blank">
+            <a href="./myprojects/бокс/index.html#trainers" class="project-card" target="_blank">
                 <div class="project-image">
                     <div class="project-logo-placeholder">
                         <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" opacity="0.4">
@@ -669,7 +836,6 @@
                 </div>
                 <span class="project-arrow">↗</span>
             </a>
-
         </div>
     </section>
 
@@ -702,17 +868,19 @@
     <script>
         (() => {
             const cursor = document.getElementById('cursor');
-            document.addEventListener('mousemove', (e) => {
-                cursor.style.left = `${e.clientX}px`;
-                cursor.style.top = `${e.clientY}px`;
-            });
-            document.addEventListener('mousedown', () => cursor.classList.add('cursor-active'));
-            document.addEventListener('mouseup', () => cursor.classList.remove('cursor-active'));
-            const hoverTargets = document.querySelectorAll('a, button, .project-card, .skill-tag');
-            hoverTargets.forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
-            });
+            if (window.innerWidth > 768) {
+                document.addEventListener('mousemove', (e) => {
+                    cursor.style.left = `${e.clientX}px`;
+                    cursor.style.top = `${e.clientY}px`;
+                });
+                document.addEventListener('mousedown', () => cursor.classList.add('cursor-active'));
+                document.addEventListener('mouseup', () => cursor.classList.remove('cursor-active'));
+                const hoverTargets = document.querySelectorAll('a, button, .project-card, .skill-tag');
+                hoverTargets.forEach(el => {
+                    el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
+                    el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
+                });
+            }
 
             const preloader = document.getElementById('preloader');
             const preloaderText = document.getElementById('preloaderText');
@@ -733,6 +901,19 @@
                     }, 600);
                 }
             }, 450);
+
+            const menuBtn = document.getElementById('menuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            menuBtn.addEventListener('click', () => {
+                menuBtn.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+            });
+            document.querySelectorAll('.mobile-menu nav a').forEach(link => {
+                link.addEventListener('click', () => {
+                    menuBtn.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                });
+            });
         })();
     </script>
 </body>
